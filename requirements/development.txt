@@ -1,0 +1,3 @@
+-r base.txt
+
+flake8>=7.1.1,<7.2  # https://flake8.pycqa.org/en/latest/
