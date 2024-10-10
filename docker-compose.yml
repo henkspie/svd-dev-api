@@ -14,24 +14,24 @@ services:
       sh -c  " # python manage.py wait_for_db && \
                # python manage.py migrate && \
             python manage.py runserver 0.0.0.0:8000"
-    # environment:
-    #   - DB_HOST=db
-    #   - DB_NAME=devdb
-    #   - DB_USER=devuser
-    #   - DB_PASS=changeme
-    # depends_on:
-    #   - db
+    environment:
+      - DB_HOST=db
+      - DB_NAME=svddevdb
+      - DB_USER=svddevuser
+      - DB_PASS=svddevpostgres
+    depends_on:
+      - db
 
-#   db:
-#     image: postgres:14-alpine
-#     volumes:
-#       - dev-db-data:/var/lib/postgresql/data
-#     environment:
-#       - POSTGRES_DB=devdb
-#       - POSTGRES_USER=devuser
-#       - POSTGRES_PASSWORD=changeme
+  db:
+    image: postgres:17-alpine
+    volumes:
+      - svd-dev-db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=svddevdb
+      - POSTGRES_USER=svddevuser
+      - POSTGRES_PASSWORD=svddevpostgres
 
 
-# volumes:
-#   dev-db-data:
+volumes:
+  svd-dev-db-data:
 #   dev-static-data:

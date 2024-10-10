@@ -5,4 +5,4 @@ exclude =
     __pycache__,
     .*
     README.md
-    settings/
+    config/settings/*
