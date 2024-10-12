@@ -80,17 +80,13 @@ WSGI_APPLICATION = "config.wsgi.application"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    "default": {
+    "default":
         # Raises ImproperlyConfigured Exception
         # if DATABASE_URL Not in os.environ and
         # the "default" argument is not defined.
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": env("DATABASE_NAME"),
-        "USER": env("DATABASE_USERNAME"),
-        "PASSWORD": env("DATABASE_PASSWORD"),
-        "HOST": env("DATABASE_HOST"),
-        "PORT": env("DATABASE_PORT"),
-    }
+        # expect a value in the following format:
+        # DATABASE_URL=postgres://user:password@hostname_or_ip:port/database_name
+        env.db("DATABASE_URL", default="postgres:///svddevdb")
 }
 
 
