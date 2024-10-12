@@ -81,7 +81,10 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": env("DATABASE_ENGINE"),
+        # Raises ImproperlyConfigured Exception
+        # if DATABASE_URL Not in os.environ and
+        # the "default" argument is not defined.
+        "ENGINE": "django.db.backends.postgresql",
         "NAME": env("DATABASE_NAME"),
         "USER": env("DATABASE_USERNAME"),
         "PASSWORD": env("DATABASE_PASSWORD"),
