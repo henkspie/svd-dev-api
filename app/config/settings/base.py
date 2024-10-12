@@ -19,10 +19,10 @@ APPS_DIR = BASE_DIR / "svd"
 
 env = environ.Env(DEBUG=(bool, False))
 
-# ENV_FILE = BASE_DIR / ".env"
-# if Path(ENV_FILE).exists():
+ENV_FILE = BASE_DIR / ".env"
+if Path(ENV_FILE).exists():
 # OS environment variables take precedence over variables from .env
-env.read_env(str(BASE_DIR / ".env"))
+    env.read_env(str(BASE_DIR / ".env"))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
