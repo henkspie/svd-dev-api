@@ -19,17 +19,17 @@ def check_normalize_svdUser(name):
         # we do not allow users older as 120 years or younger as 5
         year = int(txt[1][:4])
         now = int(datetime.datetime.now().year)
-        if year not in range(now-5, now-120):
-            return False
+        # print(f"{txt[0]} {year} {now-120} {now-5}" )
+        if year in range(now-120, now-5):
+            return f"{txt[0].capitalize()}_{txt[1]}"
 
-        return f"{txt[0].capitalize()}_{txt[1]}"
     return False
 
 
 class SvdUserManager(BaseUserManager):
     """Manager fo SvdUsers."""
 
-    def create_user(self, svdUser, password=None, email=None, **extra_fields):
+    def _create_user(self, svdUser, password, email, **extra_fields):
         """Create, save and return a new user."""
         svdUser = check_normalize_svdUser(svdUser)
         if not svdUser:
@@ -37,8 +37,17 @@ class SvdUserManager(BaseUserManager):
         user = self.model(svdUser=svdUser, email=self.normalize_email(email), **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
-
         return user
+
+    def create_user(self, svdUser, password=None, email=None, **extra_fields):
+        extra_fields.setdefault("is_staff", False)
+        extra_fields.setdefault("is_superuser", False)
+        return self._create_user(svdUser, password, email, **extra_fields)
+
+    def create_superuser(self, svdUser, password=None, email=None, **extra_fields):
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_superuser", True)
+        return self._create_user(svdUser, password, email, **extra_fields)
 
 
 class SvdUser(AbstractBaseUser, PermissionsMixin):

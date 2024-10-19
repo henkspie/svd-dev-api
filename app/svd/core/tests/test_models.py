@@ -42,7 +42,18 @@ class model_tests(TestCase):
         ]
         for svdUser in wrong_users:
             with self.assertRaises(ValueError):
-                user = get_user_model().objects.create_user(svdUser, "testpass123") # noqa
+                get_user_model().objects.create_user(svdUser, "testpass123")
+
+    def test_create_superuser(self):
+        """ Test creating a superuser"""
+        user = get_user_model().objects.create_superuser(
+            "user_19500106",
+            "testpass123",
+        )
+
+        self.assertTrue(user.is_staff)
+        self.assertTrue(user.is_superuser)
+        self.assertEqual(user.svdUser, "User_19500106")
 
     # def test_svdUser_is_in_familyTree(self):
     #     """Test the svUser is a member of the family tree."""
