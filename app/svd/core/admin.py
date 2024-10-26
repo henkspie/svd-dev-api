@@ -13,7 +13,7 @@ class UserAdmin(BaseUserAdmin):
     ordering = ["id"]
     list_display = ["svdUser", "email"]
     fieldsets = (
-        (None, {'fields': ('svdUser', 'password')}),
+        (None, {'fields': ('svdUser', 'email', 'password')}),
         (
             _('Permissions'),
             {

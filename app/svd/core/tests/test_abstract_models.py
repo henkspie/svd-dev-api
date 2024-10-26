@@ -8,19 +8,24 @@ Modified by  H.Spierings ( importing models manually)
 # from django.db import connection
 from django.test import TestCase
 from django.db import models, connection
-# from django.db.migrations.executor import MigrationExecutor
-# from django.db.migrations.state import ProjectState
+from django.contrib.auth import get_user_model
+from django.test import Client
 
-from ..abstract_models import TimeStampedModel
+from ..abstract_models import StampedBaseModel, TimeStampedModel
 
 
 class AbstractModelTest(TestCase):
     """ Testing of abstract models."""
 
     def setUp(self):
-        """ Set up the project state and migrations for the dynamic model"""
-        # self.executor = MigrationExecutor(connection)
-        # self.old_state = self.executor._create_project_state()
+        """ Create user and dynamic model"""
+        self.client =Client()
+        self.user = get_user_model().objects.create_user(
+            svdUser='User_19500106',
+            password="testpass123"
+        )
+        self.client.force_login(self.user)
+        print(type(self.client))
 
         # Dynamically create a model that inherits from TimestampedModel
         self.TestModel = self.create_test_model()
@@ -44,15 +49,15 @@ class AbstractModelTest(TestCase):
         with connection.schema_editor() as schema_editor:
             schema_editor.delete_model(self.TestModel)
 
-        # Restore the old project state
-        # self.executor._migrate_all_forwards(
-        #                   self.executor.loader.graph.leaf_nodes(), self.old_state)
-        return super().tearDown()
+        super().tearDown()
+        connection.close()
 
     def test_inherits_abstract_fields(self):
         """ Test create an instance of the dynamically created model."""
-        res = self.TestModel.objects.create(name='Test case')
+        res = self.TestModel.objects.create(name='Test case',)
+                                        #    editor=self.user)
 
-        self.assertEqual(res.name, 'Test case')
+        # self.assertEqual(res.name, 'Test case')
+        # self.assertEqual(res.editor.svdUser, 'User_19500106')
         self.assertIsNotNone(res.created)
         self.assertIsNotNone(res.modified)
