@@ -4,6 +4,8 @@ Tests for models
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 
+from core.models import Member
+
 
 class model_tests(TestCase):
     """ Test models"""
@@ -55,12 +57,22 @@ class model_tests(TestCase):
         self.assertTrue(user.is_superuser)
         self.assertEqual(user.svdUser, "User_19500106")
 
-    # def test_svdUser_is_in_familyTree(self):
-    #     """Test the svUser is a member of the family tree."""
-    #     firstname = "Jan Karel"
-    #     name = "User"
-    #     birthday = "1959-01-06"
-    #     member = FamilyTree.objects.create(firstname=firstname,
-    #                                        name=name, birthday=birthday)
+    def test_adding_member_in_familyTree(self):
+        """Test a member to the family tree."""
+        username = 'User_19500106'
+        password = "testpass123"
+        user = get_user_model().objects.create_user(
+            svdUser=username,
+            password=password,
+        )
+        firstname = "Jan Karel"
+        name = "User"
+        birthday = "1958-01-06"
+        member = Member.objects.create(
+            firstname=firstname,
+            lastname=name,
+            birthday=birthday,
+            editor=user)
 
-    #     username = "User_19500106"
+        self.assertEqual(member.lastname, name)
+        self.assertEqual(member.editor, user)

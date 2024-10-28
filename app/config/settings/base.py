@@ -41,7 +41,8 @@ DJANGO_APPS = [
 ]
 
 THIRD_PARTY_APPS = []
-PROJECT_APPS = ["svd.core.apps.CoreConfig",]
+PROJECT_APPS = ["svd.core.apps.CoreConfig",
+                "svd.svdUser.apps.SvduserConfig",]
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + PROJECT_APPS
 
 

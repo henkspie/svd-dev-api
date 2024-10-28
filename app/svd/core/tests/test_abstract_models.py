@@ -19,7 +19,7 @@ class AbstractModelTest(TestCase):
 
     def setUp(self):
         """ Create user and dynamic model"""
-        self.client =Client()
+        self.client = Client()
         self.user = get_user_model().objects.create_user(
             svdUser='User_19500106',
             password="testpass123"
