@@ -11,9 +11,9 @@ from core import models
 class UserAdmin(BaseUserAdmin):
     """ Define the admin pages for users."""
     ordering = ["id"]
-    list_display = ["svdUser", "email"]
+    list_display = ["name", 'birthday']  # ["svdUser", "email"]
     fieldsets = (
-        (None, {'fields': ('svdUser', 'email', 'password')}),
+        (None, {'fields': ('name', 'svdUser', 'email', 'password')}),
         (
             _('Permissions'),
             {
@@ -41,6 +41,14 @@ class UserAdmin(BaseUserAdmin):
             )
         }),
     )
+
+    def name(self, admin):
+        name = admin.svdUser.split('_')[0]
+        return f"{name}"
+
+    def birthday(self, admin):
+        birthday = admin.svdUser.split('_')[1]
+        return f"{birthday[:4]}-{birthday[4:6]}-{birthday[6:8]}"
 
 
 admin.site.register(models.SvdUser, UserAdmin)
