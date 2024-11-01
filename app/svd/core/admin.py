@@ -5,15 +5,16 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.translation import gettext_lazy as _
 
-from core import models
+from core import models, forms
 
 
 class UserAdmin(BaseUserAdmin):
     """ Define the admin pages for users."""
-    ordering = ["id"]
-    list_display = ["name", 'birthday']  # ["svdUser", "email"]
+    add_form = forms.svdUserAdminForm
+    ordering = ["svdUser",]
+    list_display = ["name", 'birthday', "email"]  # ["svdUser", "email"]
     fieldsets = (
-        (None, {'fields': ('name', 'svdUser', 'email', 'password')}),
+        (None, {'fields': ('svdUser', 'email', 'password')}),
         (
             _('Permissions'),
             {
@@ -26,12 +27,14 @@ class UserAdmin(BaseUserAdmin):
         ),
         (_('Important dates'), {'fields': ('last_login', )}),
     )
-    readonly_fields = ['last_login', 'svdUser']
+    readonly_fields = ['last_login', "svdUser"]
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
             'fields': (
-                'svdUser',
+                # 'svdUser',
+                'birthday',
+                'name',
                 'email',
                 'password1',
                 'password2',
@@ -47,8 +50,11 @@ class UserAdmin(BaseUserAdmin):
         return f"{name}"
 
     def birthday(self, admin):
-        birthday = admin.svdUser.split('_')[1]
-        return f"{birthday[:4]}-{birthday[4:6]}-{birthday[6:8]}"
+        try:
+            birthday = admin.svdUser.split('_')[1]
+            return f"{birthday[:4]}-{birthday[4:6]}-{birthday[6:8]}"
+        except:
+            return _("No Date")
 
 
 admin.site.register(models.SvdUser, UserAdmin)

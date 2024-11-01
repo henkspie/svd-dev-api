@@ -28,15 +28,32 @@ def check_normalize_svdUser(name):
 
     return False
 
+def check_and_normalize_svdUser(name):
+    """ Check or create a svdUser"""
+    svdUser=False
+    if name:
+        svdUser = check_normalize_svdUser(name)
+
+    if svdUser is None:
+        birthday = input(_("What is your birthday:"))
+        print(f"What is your birthday")
+        candidates = Member.objects.filter(birthday=birthday).values()
+        if candidates:
+            for name in candidates:
+                print(candidates.lastname)
+        else:
+            print("No candidates")
+    return svdUser
+
 
 class SvdUserManager(BaseUserManager):
     """Manager fo SvdUsers."""
 
     def _create_user(self, svdUser, password, email, **extra_fields):
         """Create, save and return a new user."""
-        svdUser = check_normalize_svdUser(svdUser)
+        svdUser = check_and_normalize_svdUser(svdUser)
         if not svdUser:
-            raise ValueError(_("Not a correct SvdUser name given."))
+            raise NameError(_("Not a correct SvdUser name given."))
         user = self.model(svdUser=svdUser, email=self.normalize_email(email), **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
@@ -102,13 +119,13 @@ class Member(StampedBaseModel):
         _("Date of Birth"),
         null=True,
         blank=True,
-        help_text="Please use the following format: <em><strong>YYYY-MM-DD</strong><em>."
+        help_text=_("Please use the following format: <em><strong>YYYY-MM-DD</strong><em>.")
     )
     time_birth = models.TimeField(
         _("Time of Birth"),
         null=True,
         blank=True,
-        help_text="Please use the following format: <em><strong>14:00:00</strong><em>."
+        help_text=_("Please use the following format: <em><strong>14:00:00</strong><em>.")
     )
     birthday_txt = models.CharField(
         max_length=16,

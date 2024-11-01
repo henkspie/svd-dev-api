@@ -45,3 +45,20 @@ class AdminSiteTests(TestCase):
         res = self.client.get(url)
 
         self.assertEqual(res.status_code, 200)
+
+    def test_admin_login_username(self):
+        """ Test successful login"""
+        # Define the login url
+        url = reverse('admin:login')
+
+        res = self.client.post('url',
+            svdUser=self.user.svdUser,
+            password="testpass123",
+            email="user@example.com",
+            follow=True,
+        )
+        print(res)
+        # A successful login returns 302 otherwise 200
+        self.assertTrue(res.context['svdUser'].is_authenticated)
+        self.assertEqual(res.status_code, 302)
+        self.assertContains(res, self.user.svdUser)

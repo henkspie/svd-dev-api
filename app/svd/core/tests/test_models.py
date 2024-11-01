@@ -43,7 +43,7 @@ class model_tests(TestCase):
             "User_18500106",
         ]
         for svdUser in wrong_users:
-            with self.assertRaises(ValueError):
+            with self.assertRaises(NameError):
                 get_user_model().objects.create_user(svdUser, "testpass123")
 
     def test_create_superuser(self):
@@ -58,7 +58,7 @@ class model_tests(TestCase):
         self.assertEqual(user.svdUser, "User_19500106")
 
     def test_adding_member_in_familyTree(self):
-        """Test a member to the family tree."""
+        """Test a member to the family tree is successful."""
         username = 'User_19500106'
         password = "testpass123"
         user = get_user_model().objects.create_user(

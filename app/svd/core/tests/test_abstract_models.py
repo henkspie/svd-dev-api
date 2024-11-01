@@ -25,7 +25,6 @@ class AbstractModelTest(TestCase):
             password="testpass123"
         )
         self.client.force_login(self.user)
-        print(type(self.client))
 
         # Dynamically create a model that inherits from TimestampedModel
         self.TestModel = self.create_test_model()
