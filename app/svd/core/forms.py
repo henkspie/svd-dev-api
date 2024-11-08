@@ -40,7 +40,7 @@ class svdUserAdminForm(BaseUserCreationForm):
         try:
             self.clean()
             self.cleaned_data['svdUser'] = self.clean_svdUser()
-            print(self.cleaned_data)
+            # print(self.cleaned_data)
             user = super().save(commit=False)
             user.svdUser = self.cleaned_data.get('svdUser')
             new_user = super().save(commit)

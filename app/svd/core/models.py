@@ -59,12 +59,12 @@ class SvdUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_user(self, svdUser, password=None, email=None, **extra_fields):
+    def create_user(self, svdUser=None, password=None, email=None, **extra_fields):
         extra_fields.setdefault("is_staff", False)
         extra_fields.setdefault("is_superuser", False)
         return self._create_user(svdUser, password, email, **extra_fields)
 
-    def create_superuser(self, svdUser, password=None, email=None, **extra_fields):
+    def create_superuser(self, svdUser=None, password=None, email=None, **extra_fields):
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
         return self._create_user(svdUser, password, email, **extra_fields)
@@ -83,7 +83,7 @@ class SvdUser(AbstractBaseUser, PermissionsMixin):
 
 
 class Member(StampedBaseModel):
-    class Gender(models.TextChoices):
+    class Sex(models.TextChoices):
         UNASSIGNED = (
             "U",
             _("Unassigned"),
@@ -107,10 +107,10 @@ class Member(StampedBaseModel):
     )
     lastname = models.CharField(_("Last Name"), max_length=63)
     call_name = models.CharField(_("Call name"), max_length=15, blank=True)
-    birth_gender = models.CharField(
+    sex = models.CharField(
         max_length=3,
-        choices=Gender,
-        default=Gender.UNASSIGNED,
+        choices=Sex,
+        default=Sex.UNASSIGNED,
         verbose_name=_("Gender by birth"),
         db_comment=_("Can be UNASSIGNED, MAN or FEMALE."),
         help_text=_("A modern choice is Unassigned"),
@@ -121,27 +121,7 @@ class Member(StampedBaseModel):
         blank=True,
         help_text=_("Please use the following format: <em><strong>YYYY-MM-DD</strong><em>.")
     )
-    time_birth = models.TimeField(
-        _("Time of Birth"),
-        null=True,
-        blank=True,
-        help_text=_("Please use the following format: <em><strong>14:00:00</strong><em>.")
-    )
     birthday_txt = models.CharField(
-        max_length=16,
-        blank=True,
-        null=True
-    )
-    death_date = models.DateField(
-        blank=True,
-        null=True,
-        help_text=_(
-            "Please use the following format: <em><strong>YYYY-MM-DD</strong></em>."
-        ),
-        verbose_name=_("Died"),
-        # default="1111-11-11",
-    )
-    death_date_txt = models.CharField(
         max_length=16,
         blank=True,
         null=True

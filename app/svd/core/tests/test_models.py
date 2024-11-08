@@ -12,7 +12,7 @@ class model_tests(TestCase):
 
     def test_create_svdUser_with_username_successful(self):
         """ Test creating a SvdUser with an username is successful."""
-        username = 'User_19500106'
+        username = 'Tester_19500106'
         password = "testpass123"
         user = get_user_model().objects.create_user(
             svdUser=username,
@@ -46,8 +46,8 @@ class model_tests(TestCase):
             with self.assertRaises(NameError):
                 get_user_model().objects.create_user(svdUser, "testpass123")
 
-    def test_create_superuser(self):
-        """ Test creating a superuser"""
+    def test_create_simple_superuser(self):
+        """ Test creating a superuser with svdUser constructed"""
         user = get_user_model().objects.create_superuser(
             "user_19500106",
             "testpass123",
@@ -76,3 +76,9 @@ class model_tests(TestCase):
 
         self.assertEqual(member.lastname, name)
         self.assertEqual(member.editor, user)
+
+    def test_svdUser_is_in_member_db(self):
+        pass
+
+
+
