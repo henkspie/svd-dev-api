@@ -26,48 +26,61 @@ def check_normalize_svdUser(name):
         if year in range(now-120, now-5):
             return f"{txt[0].capitalize()}_{txt[1]}"
 
-    return False
+    raise  NameError(_("Not a correct svdUser name given."))
 
-def check_and_normalize_svdUser(name):
-    """ Check or create a svdUser"""
-    svdUser=False
-    if name:
-        svdUser = check_normalize_svdUser(name)
-
-    if svdUser is None:
-        birthday = input(_("What is your birthday:"))
-        print(f"What is your birthday")
-        candidates = Member.objects.filter(birthday=birthday).values()
-        if candidates:
-            for name in candidates:
-                print(candidates.lastname)
+def check_svdUser_in_members(name):
+    """ Check if svdUser is in the members db"""
+    # only members can create an account
+    name = name.split("_")
+    bd = name[1]
+    bd = f"{bd[:4]}-{bd[4:6]}-{bd[6:]}"
+    print(bd)
+    candidates = Member.objects.filter(birthday=bd).values()
+    if candidates:
+        for name in candidates:
+            print(candidates.lastname)
         else:
             print("No candidates")
-    return svdUser
+
+    raise ValueError(_("You are not in the db"))
 
 
 class SvdUserManager(BaseUserManager):
     """Manager fo SvdUsers."""
 
-    def _create_user(self, svdUser, password, email, **extra_fields):
+    def _create_user(self, name, birthday, password, email, **extra_fields):
         """Create, save and return a new user."""
-        svdUser = check_and_normalize_svdUser(svdUser)
-        if not svdUser:
-            raise NameError(_("Not a correct SvdUser name given."))
-        user = self.model(svdUser=svdUser, email=self.normalize_email(email), **extra_fields)
-        user.set_password(password)
-        user.save(using=self._db)
-        return user
+        # If name is given than the new user is requested by HTML.
+        # Tests and admin will not be checked on existence in member.
+        # Tests if 'example' is included in the email address.
+        # admin will not use this routine.
+        if name:
+            date = str(birthday)
+            date = date[:4]+date[5:7]+date[8:]
+            user = f"{name}_{date}"
+            if "example" not in email :
+                user = check_svdUser_in_members(user)
+        else:
+            user = extra_fields["svdUser"]
 
-    def create_user(self, svdUser=None, password=None, email=None, **extra_fields):
+        extra_fields["svdUser"] = check_normalize_svdUser(user)
+
+        new_user = self.model(email=self.normalize_email(email), **extra_fields)
+        new_user.set_password(password)
+        new_user.save(using=self._db)
+        return new_user
+
+    def create_user(self, name=None, birthday=None,
+                    password=None, email=None, **extra_fields):
         extra_fields.setdefault("is_staff", False)
         extra_fields.setdefault("is_superuser", False)
-        return self._create_user(svdUser, password, email, **extra_fields)
+        return self._create_user(name, birthday, password, email, **extra_fields)
 
-    def create_superuser(self, svdUser=None, password=None, email=None, **extra_fields):
+    def create_superuser(self, name=None, birthday=None,
+                         password=None, email=None, **extra_fields):
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
-        return self._create_user(svdUser, password, email, **extra_fields)
+        return self._create_user(name, birthday, password, email, **extra_fields)
 
 
 class SvdUser(AbstractBaseUser, PermissionsMixin):

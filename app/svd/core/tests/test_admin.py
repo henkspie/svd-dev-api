@@ -61,7 +61,7 @@ class AdminSiteTests(TestCase):
             # follow=True,
         # )
         res = self.client.get(url)
-        print(res)
+        # print(res)
         # A successful login returns 302 otherwise 200
         self.assertEqual(res.status_code, 302)
 
