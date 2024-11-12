@@ -7,16 +7,17 @@ from django.contrib.auth.forms import BaseUserCreationForm
 from .models import SvdUser
 from django.utils.translation import gettext_lazy as _
 
+
 class svdUserAdminForm(BaseUserCreationForm):
     """ Form for customizing svdUser Admin login form"""
     # print("I am in svdUserAdminForm")
-    birthday = forms.DateField(help_text=
-                               _("Please use the following format: <em><strong>YYYY-MM-DD</strong><em>."))
+    birthday = forms.DateField(
+        help_text=_("Please use the following format:<em><strong>YYYY-MM-DD</strong><em>."))
     name = forms.CharField(max_length=63,
                            help_text=_("Use your family name or one of your first names"))
 
     class Meta:
-        model=SvdUser
+        model = SvdUser
         fields = '__all__'
 
     def clean_birthday(self):
@@ -34,7 +35,6 @@ class svdUserAdminForm(BaseUserCreationForm):
         birthday = self.cleaned_data['birthday']
         name = self.cleaned_data['name']
         return f"{name}_{birthday}"
-
 
     def save(self, commit=True):
         try:

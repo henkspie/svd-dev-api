@@ -1,3 +1,11 @@
-from django.shortcuts import render
+"""
+Views for the svdUser API.
+"""
+from rest_framework import generics
 
-# Create your views here.
+from svdUser.serializers import SvdUserSerializer
+
+
+class CreateSvdUserView(generics.CreateAPIView):
+    """ Create a new svdUser in the system"""
+    serializer_class = SvdUserSerializer

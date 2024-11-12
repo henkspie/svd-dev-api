@@ -3,20 +3,23 @@ Tests for models
 """
 from django.test import TestCase
 from django.contrib.auth import get_user_model
-from django.test import Client
+# from django.test import Client
 
 from core.models import Member
 
 test_members = [
-    {   "firstname": "Jan Karel",
+    {
+        "firstname": "Jan Karel",
         "name": "User",
         "birthday": "1958-01-06",
     },
-    {   "firstname": "None",
+    {
+        "firstname": "None",
         "name": "Tester",
         "birthday": "1950-01-06",
-    },
+    }
 ]
+
 
 class model_tests(TestCase):
     """ Test models"""
@@ -32,7 +35,6 @@ class model_tests(TestCase):
     #         birthday=bd,
     #         editor=user
     #         )
-
 
     def test_create_svdUser_with_username_successful(self):
         """ Test creating a SvdUser with an username is successful."""
@@ -67,7 +69,7 @@ class model_tests(TestCase):
             "User_18500106",
         ]
         for user in wrong_users:
-             with self.assertRaisesRegex(NameError, "Not a correct svdUser name given."):
+            with self.assertRaisesRegex(NameError, "Not a correct svdUser name given."):
                 get_user_model().objects.create_user(svdUser=user, password="testpass123")
 
     def test_create_simple_superuser(self):
@@ -94,7 +96,6 @@ class model_tests(TestCase):
         self.assertEqual(user.svdUser, "Tester_19760114")
         self.assertTrue(user.check_password("testpass123"))
 
-
     def test_adding_member_in_familyTree(self):
         """Test a member to the family tree is successful."""
         username = 'User_19500106'
@@ -117,6 +118,3 @@ class model_tests(TestCase):
 
     def test_svdUser_is_in_member_db(self):
         pass
-
-
-

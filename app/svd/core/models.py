@@ -26,7 +26,8 @@ def check_normalize_svdUser(name):
         if year in range(now-120, now-5):
             return f"{txt[0].capitalize()}_{txt[1]}"
 
-    raise  NameError(_("Not a correct svdUser name given."))
+    raise NameError(_("Not a correct svdUser name given."))
+
 
 def check_svdUser_in_members(name):
     """ Check if svdUser is in the members db"""
@@ -34,7 +35,7 @@ def check_svdUser_in_members(name):
     name = name.split("_")
     bd = name[1]
     bd = f"{bd[:4]}-{bd[4:6]}-{bd[6:]}"
-    print(bd)
+    # print(bd)
     candidates = Member.objects.filter(birthday=bd).values()
     if candidates:
         for name in candidates:
@@ -52,13 +53,13 @@ class SvdUserManager(BaseUserManager):
         """Create, save and return a new user."""
         # If name is given than the new user is requested by HTML.
         # Tests and admin will not be checked on existence in member.
-        # Tests if 'example' is included in the email address.
+        # Tests if 'example.com' is included in the email address.
         # admin will not use this routine.
         if name:
             date = str(birthday)
             date = date[:4]+date[5:7]+date[8:]
             user = f"{name}_{date}"
-            if "example" not in email :
+            if "example.com" not in email:
                 user = check_svdUser_in_members(user)
         else:
             user = extra_fields["svdUser"]
@@ -141,9 +142,11 @@ class Member(StampedBaseModel):
     )
 
     """
-        As everybody has a father and a mother you see these can not be zero, but they are not always know.
+        As everybody has a father and a mother you see these can not be zero, but they are not
+        always know.
         So they can point both to zero of to one of them. Normally they are not zero
-        The person can also have different parents as there biological parents. This will be covered in 'Family'
+        The person can also have different parents as there biological parents.
+        This will be covered in 'Family'
         A person can have only one biological father and mother, therefor foreignkey is used
     """
 
@@ -168,7 +171,6 @@ class Member(StampedBaseModel):
         blank=True,
     )
 
-
     class Meta:
         ordering = ["-birthday_txt", "lastname"]
 
@@ -181,4 +183,3 @@ class Member(StampedBaseModel):
 
     def __str__(self):
         return f"{self.lastname.upper():15s}{self.call_name:24s}  ({self.only_birthday_year})"
-

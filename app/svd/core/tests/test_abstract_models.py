@@ -11,7 +11,7 @@ from django.db import models, connection
 from django.contrib.auth import get_user_model
 from django.test import Client
 
-from ..abstract_models import StampedBaseModel, TimeStampedModel
+from ..abstract_models import TimeStampedModel
 
 
 class AbstractModelTest(TestCase):
@@ -54,7 +54,7 @@ class AbstractModelTest(TestCase):
     def test_inherits_abstract_fields(self):
         """ Test create an instance of the dynamically created model."""
         res = self.TestModel.objects.create(name='Test case',)
-                                        #    editor=self.user)
+        #    editor=self.user)
 
         # self.assertEqual(res.name, 'Test case')
         # self.assertEqual(res.editor.svdUser, 'User_19500106')

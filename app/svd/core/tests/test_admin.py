@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.test import Client
 
-from core.models import Member
+# from core.models import Member
 
 
 class AdminSiteTests(TestCase):
@@ -57,8 +57,8 @@ class AdminSiteTests(TestCase):
         # self.client.login(
         #     svdUser= self.admin_user.svdUser,
         #     password="testpass123",
-            # email="user@example.com",
-            # follow=True,
+        #     email="user@example.com",
+        #     follow=True,
         # )
         res = self.client.get(url)
         # print(res)

@@ -10,3 +10,4 @@ django-environ>=0.11.2,<0.12        # https://django-environ.readthedocs.io/en/l
 # Django REST Framework
 # --------------------------------------
 djangorestframework>=3.15.0,<3.16   # https://www.django-rest-framework.org/
+drf-spectacular>=0.27.2,<0.28       # https://drf-spectacular.readthedocs.io/en/latest/readme.html
