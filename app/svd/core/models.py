@@ -95,6 +95,10 @@ class SvdUser(AbstractBaseUser, PermissionsMixin):
     objects = SvdUserManager()
     USERNAME_FIELD = 'svdUser'
 
+    # @property
+    # def name():
+    #     pass
+
 
 class Member(StampedBaseModel):
     class Sex(models.TextChoices):

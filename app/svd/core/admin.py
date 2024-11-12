@@ -53,7 +53,7 @@ class UserAdmin(BaseUserAdmin):
         try:
             birthday = admin.svdUser.split('_')[1]
             return f"{birthday[:4]}-{birthday[4:6]}-{birthday[6:8]}"
-        except:
+        except:     # noqa :E722
             return _("No Date")
 
 

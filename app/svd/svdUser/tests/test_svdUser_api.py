@@ -63,5 +63,3 @@ class PublicUserApiTests(TestCase):
             svdUser=payload['svdUser']
         ).exists()
         self.assertFalse(user_exists)
-
-
