@@ -24,4 +24,4 @@ class Command(BaseCommand):
                     "Database not ready, waiting for 1 second...")
                 time.sleep(1)
 
-        self.stdout.write(self.style.SUCCESS("Database ready!"))
+        self.stdout.write(self.style.SUCCESS("svdUser Database ready!"))

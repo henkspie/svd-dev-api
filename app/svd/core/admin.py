@@ -12,7 +12,7 @@ class UserAdmin(BaseUserAdmin):
     """ Define the admin pages for users."""
     add_form = forms.svdUserAdminForm
     ordering = ["svdUser",]
-    list_display = ["name", 'birthday', "email"]  # ["svdUser", "email"]
+    list_display = ["svdUser", "email"]
     fieldsets = (
         (None, {'fields': ('svdUser', 'email', 'password')}),
         (
@@ -25,7 +25,7 @@ class UserAdmin(BaseUserAdmin):
                 )
             }
         ),
-        (_('Important dates'), {'fields': ('last_login', )}),
+        (_('Important dates'), {'fields': ['last_login', ]}),
     )
     readonly_fields = ['last_login', "svdUser"]
     add_fieldsets = (

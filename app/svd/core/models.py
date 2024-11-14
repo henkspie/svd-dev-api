@@ -64,11 +64,14 @@ class SvdUserManager(BaseUserManager):
         else:
             user = extra_fields["svdUser"]
 
-        extra_fields["svdUser"] = check_normalize_svdUser(user)
+        extra_fields["svdUser"] = check_normalize_svdUser(use."r)
 
-        new_user = self.model(email=self.normalize_email(email), **extra_fields)
-        new_user.set_password(password)
-        new_user.save(using=self._db)
+        try:
+            new_user = self.model(email=self.normalize_email(email), **extra_fields)
+            new_user.set_password(password)
+            new_user.save(using=self._db)
+        except Exception as e:
+            raise  ValueError("Save Error")
         return new_user
 
     def create_user(self, name=None, birthday=None,
@@ -89,6 +92,8 @@ class SvdUser(AbstractBaseUser, PermissionsMixin):
     svdUser = models.CharField(_("Name_Birthday of the svdUser"), max_length=63, unique=True)
     email = models.EmailField(_("Email valid for the User of the this website"),
                               max_length=255, blank=True, null=True)
+    name = models.CharField(_("First or Lastname"), max_length=47, default="")
+    birthday = models.DateField(_("Birthday of the user"), null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 
