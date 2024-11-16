@@ -13,7 +13,7 @@ class TimeStampedModel(models.Model):
 class StampedBaseModel(TimeStampedModel):
     note = models.CharField(max_length=255, blank=True)
     editor = models.ForeignKey(
-        settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.CASCADE
+        settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.PROTECT
     )
 
     class Meta:

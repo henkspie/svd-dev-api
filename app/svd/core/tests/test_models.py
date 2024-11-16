@@ -98,19 +98,16 @@ class model_tests(TestCase):
 
     def test_adding_member_in_familyTree(self):
         """Test a member to the family tree is successful."""
-        username = 'User_19500106'
-        password = "testpass123"
         user = get_user_model().objects.create_user(
-            svdUser=username,
-            password=password,
+            svdUser='User_19500106',
+            password="testpass123",
         )
-        firstname = "Jan Karel"
+
         name = "User"
-        birthday = "1958-01-06"
         member = Member.objects.create(
-            firstname=firstname,
+            firstname="Jan Karel",
             lastname=name,
-            birthday=birthday,
+            birthday="1958-01-06",
             editor=user)
 
         self.assertEqual(member.lastname, name)

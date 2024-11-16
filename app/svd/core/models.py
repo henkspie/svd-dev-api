@@ -161,20 +161,20 @@ class Member(StampedBaseModel):
 
     father = models.ForeignKey(
         to="self",
-        on_delete=models.SET_NULL,
+        on_delete=models.PROTECT,
         related_query_name="bio_father",
         verbose_name=_("Biological father"),
-        limit_choices_to={"birth_gender": "M"},
+        limit_choices_to={"sex": "M"},
         help_text=_("If not known leave it blank!"),
         null=True,
         blank=True,
     )
     mother = models.ForeignKey(
         to="self",
-        on_delete=models.SET_NULL,
+        on_delete=models.PROTECT,
         related_name="bio_mother",
         verbose_name=_("Biological mother"),
-        limit_choices_to={"birth_gender": "F"},
+        limit_choices_to={"sex": "F"},
         help_text=_("If not known leave it blank!"),
         null=True,
         blank=True,

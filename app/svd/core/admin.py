@@ -58,3 +58,4 @@ class UserAdmin(BaseUserAdmin):
 
 
 admin.site.register(models.SvdUser, UserAdmin)
+admin.site.register(models.Member)
