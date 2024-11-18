@@ -10,7 +10,7 @@ class MemberSerializer(serializers.ModelSerializer):
     """ Serializer for member."""
 
     class Meta:
-        model=Member
+        model = Member
         fields = [
             "id",
             "lastname",
@@ -21,7 +21,7 @@ class MemberSerializer(serializers.ModelSerializer):
             "birthday_txt",
             "father",
             "mother",
-            "editor",
+            # "editor",
         ]
         read_only_fields = ["id"]
 
@@ -29,3 +29,9 @@ class MemberSerializer(serializers.ModelSerializer):
         """ Create a member."""
         return Member.objects.create(**validated_data)
 
+
+class MemberDetailSerializer(MemberSerializer):
+    """ Serializer for member detail view."""
+
+    class Meta(MemberSerializer.Meta):
+        fields = MemberSerializer.Meta.fields + ['note', 'editor']

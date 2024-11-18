@@ -52,7 +52,7 @@ class PublicUserApiTests(TestCase):
         # res = self.client.post(CREATE_USER_URL, payload)
         # print(res)
         # self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
-        with self.assertRaisesRegex(ValueError,"Save Error" ):
+        with self.assertRaisesRegex(ValueError, "Save Error"):
             self.client.post(CREATE_USER_URL, payload)
 
     def test_password_too_short_error(self):

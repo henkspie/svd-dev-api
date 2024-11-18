@@ -21,15 +21,22 @@ from famTree import serializers
 class MemberViewSet(viewsets.ModelViewSet):
     """ View for manage member API's."""
 
-    serializer_class = serializers.MemberSerializer
+    serializer_class = serializers.MemberDetailSerializer
     queryset = Member.objects.all()
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
         """ Create a new member"""
-        serializer.save(user=self.request.user)
+        serializer.save(editor=self.request.user)
 
     def get_editor_queryset(self):
         """ Retrieve the members for the editor."""
         return self.queryset.filter(editor=self.request.user).order_by('birthday')
+
+    def get_serializer_class(self):
+        """ Return the serializer class for request"""
+        if self.action == 'list':
+            return serializers.MemberSerializer
+
+        return self.serializer_class

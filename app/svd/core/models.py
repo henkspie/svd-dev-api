@@ -70,8 +70,8 @@ class SvdUserManager(BaseUserManager):
             new_user = self.model(email=self.normalize_email(email), **extra_fields)
             new_user.set_password(password)
             new_user.save(using=self._db)
-        except Exception as e:
-            raise  ValueError("Save Error")
+        except Exception:
+            raise ValueError("Save Error")
         return new_user
 
     def create_user(self, name=None, birthday=None,

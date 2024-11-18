@@ -1,4 +1,5 @@
 """ Tests for famTree API."""
+import datetime
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
@@ -8,9 +9,15 @@ from rest_framework.test import APIClient
 
 from core.models import Member
 
-from famTree.serializers import MemberSerializer
+from famTree.serializers import MemberSerializer, MemberDetailSerializer
 
 MEMBERS_URL = reverse("famTree:member-list")
+
+
+def detail_url(member_id):
+    """ Create and return a member URL."""
+    return reverse("famTree:member-detail", args=[member_id])
+
 
 def create_member(user, **params):
     """ Create and return a member."""
@@ -30,7 +37,6 @@ def create_member(user, **params):
 
 class PublicMemberAPITests(TestCase):
     """ Test unauthorized API request"""
-
 
     def setUp(self):
         self.client = APIClient()
@@ -64,7 +70,7 @@ class PrivateMemberAPITest(TestCase):
             sex="F",
             birthday="1951-02-18",
             birthday_txt="",
-            editor=self.user )
+            editor=self.user)
         Member.objects.create(
             lastname="Tester",
             firstname="Johannes",
@@ -72,7 +78,7 @@ class PrivateMemberAPITest(TestCase):
             sex="M",
             birthday="1916-09-23",
             birthday_txt="",
-            editor=self.user )
+            editor=self.user)
 
         res = self.client.get(MEMBERS_URL)
 
@@ -81,3 +87,32 @@ class PrivateMemberAPITest(TestCase):
         # print(f"{res.data} / {serializer.data}")
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertListEqual(res.data, serializer.data)
+
+    def test_get_member_detail(self):
+        """ Test get member detail."""
+        member = create_member(user=self.user)
+
+        url = detail_url(member.id)
+        res = self.client.get(url)
+
+        serializer = MemberDetailSerializer(member)
+        # print(f"{res.data} / {serializer.data}")
+        self.assertEqual(res.data, serializer.data)
+
+    def test_create_member(self):
+        """ Test creating a member with the API."""
+        payload = {
+        "lastname": "Tester",
+        "firstname": "Henricus",
+        "call_name": "Henk",
+        "sex": "M",
+        "birthday": datetime.date(1957, 1, 6),
+        "birthday_txt": "1957",
+        }
+        res = self.client.post(MEMBERS_URL, payload)
+
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+        member = Member.objects.get(id=res.data['id'])
+        for key, value in payload.items():
+            self.assertEqual(getattr(member, key), value)
+        self.assertEqual(member.editor, self.user)
