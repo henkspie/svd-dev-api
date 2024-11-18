@@ -1,0 +1,105 @@
+[
+    {
+        "model": "core.models.Member",
+        "pk": "1ba51b63-6abf-4d8b-94ea-99a717e01291",
+        "fields": {
+            "lastname": "Tester",
+            "firstname": "Frea",
+            "call_name": "",
+            "sex": "F",
+            "birthday": "1951-02-18",
+            "birthday_txt": ""
+            // "father": {
+            //     "pk":""
+            //     },
+            // "mother": {
+            //     "pk": ""
+            // }
+        }
+    }
+]
+//     {
+//         "model": "core.models.member",
+//         "pk": "2be21ce5-cc7a-4a34-a658-7aae06b74abb",
+//         "fields": {
+//             "lastname": "Tester",
+//             "firstname": "Henk",
+//             "call_name": "",
+//             "sex": "M",
+//             "birthday": "1950-01-06",
+//             "birthday_txt": "",
+//             "father": "de23ab13-ea8f-43cc-8a34-1b2f7ea6f7a8",
+//             "mother": "00f5a7c8-043f-4ab1-949e-0c745ec243ef"
+//         }
+//     },
+//     {
+//         "model": "core.models.member",
+//         "pk": "de23ab13-ea8f-43cc-8a34-1b2f7ea6f7a8",
+//         "fields": {
+//             "lastname": "Tester",
+//             "firstname": "Jan",
+//             "call_name": "",
+//             "sex": "M",
+//             "birthday": "1916-09-23",
+//             "birthday_txt": "",
+//             "father": "2da11a92-751a-4a36-aa02-3310b6ec4893",
+//             "mother": "81193bee-92a1-4589-89d2-f36cdcad3784"
+//         }
+//     },
+//     {
+//         "model": "core.models.member",
+//         "pk": "794ca6ac-b9cd-4883-8d88-43a83b949621",
+//         "fields": {
+//             "lastname": "Tester",
+//             "firstname": "Jana",
+//             "call_name": "",
+//             "sex": "F",
+//             "birthday": "1987-06-07",
+//             "birthday_txt": "",
+//             "father": "2be21ce5-cc7a-4a34-a658-7aae06b74abb",
+//             "mother": "9fb35764-cba4-4c7c-b51f-275e420947ae"
+//         }
+//     },
+//     {
+//         "model": "core.models.member",
+//         "pk": "a6c07762-2768-4cac-8852-9f0cc61618a0",
+//         "fields": {
+//             "lastname": "Tester",
+//             "firstname": "Josje Henka",
+//             "call_name": "",
+//             "sex": "F",
+//             "birthday": "1989-10-16",
+//             "birthday_txt": "",
+//             "father": "2be21ce5-cc7a-4a34-a658-7aae06b74abb",
+//             "mother": "9fb35764-cba4-4c7c-b51f-275e420947ae"
+//         }
+//     },
+//     {
+//         "model": "core.models.member",
+//         "pk": "9fb35764-cba4-4c7c-b51f-275e420947ae",
+//         "fields": {
+//             "lastname": "User",
+//             "firstname": "Annemieke",
+//             "call_name": "",
+//             "sex": "F",
+//             "birthday": "1957-02-20",
+//             "birthday_txt": "",
+//             "father": "42e999d6-44f9-4443-a991-71fc4122246d",
+//             "mother": "0aa47a9e-9312-4185-b452-bb48c7546992"
+//         }
+//     },
+//     {
+//         "model": "core.models.member",
+//         "pk": "00f5a7c8-043f-4ab1-949e-0c745ec243ef",
+//         "fields": {
+//             "lastname": "van User",
+//             "firstname": "Mien",
+//             "call_name": "",
+//             "sex": "F",
+//             "birthday": "1917-10-29",
+//             "birthday_txt": "",
+//             "father": "d57e22ae-ee9f-4ef6-9529-2c219efcedf8",
+//             "mother": "46fb9298-c67b-4bf1-a61b-e49e65473b02"
+//         }
+//     }
+// ]

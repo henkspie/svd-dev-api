@@ -1,0 +1,18 @@
+
+[
+    {
+        "model": "Member",
+        "pk": "1ba51b63-6abf-4d8b-94ea-99a717e01291",
+        "fields": {
+            "lastname": "Tester",
+            "firstname": "Frea",
+            "call_name": "",
+            "sex": "F",
+            "birthday": "1951-02-18",
+            "birthday_txt": "",
+            "editor": {
+                "svdUser": "User_19760114"
+            }
+        }
+    }
+]
