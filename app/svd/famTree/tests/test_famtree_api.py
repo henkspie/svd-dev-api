@@ -16,6 +16,7 @@ DAD_MIN_YEARS = datetime.timedelta(days=17*365)
 DAD_MAX_YEARS = datetime.timedelta(days=62*365)
 MAM_MIN_YEARS = datetime.timedelta(days=15*365)
 MAM_MAX_YEARS = datetime.timedelta(days=49*365)
+CREATE_USER_URL = reverse('svdUser:create')
 
 def detail_url(member_id):
     """ Create and return a member URL."""
@@ -258,3 +259,18 @@ class FixTestMembers(TestCase):
         # print(f"{res.data} / // / {members}")
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertCountEqual(res.data, serializer.data)
+
+    def test_user_is_in_members(self):
+        """ Test create a user is in members"""
+        payload = {
+            'name': 'Tester',
+            'birthday': '1951-02-18',
+            'email': 'tester@testemail.com',
+            'password': 'testpass123',
+        }
+        res = self.client.post(CREATE_USER_URL, payload)
+
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+        svdUser = get_user_model().objects.get(svdUser='Tester_19510218')
+        self.assertTrue(svdUser.check_password(payload['password']))
+        self.assertNotIn('password', res.data)

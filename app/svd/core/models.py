@@ -29,19 +29,18 @@ def check_normalize_svdUser(name):
     raise NameError(_("Not a correct svdUser name given."))
 
 
-def check_svdUser_in_members(name):
+def check_svdUser_in_members(name, birthday):
     """ Check if svdUser is in the members db"""
     # only members can create an account
-    name = name.split("_")
-    bd = name[1]
-    bd = f"{bd[:4]}-{bd[4:6]}-{bd[6:]}"
+    # name = name.split("_")
+    # bd = name[1]
+    # bd = f"{bd[:4]}-{bd[4:6]}-{bd[6:]}"
     # print(bd)
-    candidates = Member.objects.filter(birthday=bd).values()
+    candidates = Member.objects.filter(birthday=birthday).values()
     if candidates:
-        for name in candidates:
-            print(candidates.lastname)
-        else:
-            print("No candidates")
+        for i in range(len(candidates)):
+            if (candidates[i]["lastname"] == name or candidates[i]["call_name"] == name):
+                return
 
     raise ValueError(_("You are not in the db"))
 
@@ -56,11 +55,11 @@ class SvdUserManager(BaseUserManager):
         #   Tests if 'example.com' is included in the email address.
         #   Admin will not use this routine.
         if name:
+            if "example.com" not in email:
+                check_svdUser_in_members(name, birthday)
             date = str(birthday)
             date = date[:4]+date[5:7]+date[8:]
             user = f"{name}_{date}"
-            if "example.com" not in email:
-                user = check_svdUser_in_members(user)
         else:
             user = extra_fields["svdUser"]
 
