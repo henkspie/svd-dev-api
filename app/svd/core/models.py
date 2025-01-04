@@ -19,11 +19,11 @@ def check_normalize_svdUser(name):
     """Check the svdUser name construct is correct."""
     txt = name.split("_")
     if len(txt[1]) == 8 and txt[1].isnumeric():
-        # we do not allow users older as 120 years or younger as 5
+        # we do not allow users older as 110 years or younger as 5
         year = int(txt[1][:4])
         now = int(datetime.datetime.now().year)
         # print(f"{txt[0]} {year} {now-120} {now-5}" )
-        if year in range(now-120, now-5):
+        if year in range(now-110, now-5):
             return f"{txt[0].capitalize()}_{txt[1]}"
 
     raise NameError(_("Not a correct svdUser name given."))
@@ -52,9 +52,9 @@ class SvdUserManager(BaseUserManager):
     def _create_user(self, name, birthday, password, email, **extra_fields):
         """Create, save and return a new user."""
         # If name is given than the new user is requested by HTML.
-        # Tests and admin will not be checked on existence in member.
-        # Tests if 'example.com' is included in the email address.
-        # admin will not use this routine.
+        # Tests and admin will not be checked on existence in member:
+        #   Tests if 'example.com' is included in the email address.
+        #   Admin will not use this routine.
         if name:
             date = str(birthday)
             date = date[:4]+date[5:7]+date[8:]
@@ -71,7 +71,7 @@ class SvdUserManager(BaseUserManager):
             new_user.set_password(password)
             new_user.save(using=self._db)
         except Exception:
-            raise ValueError("Save Error")
+            raise ValueError("Save New User Error")
         return new_user
 
     def create_user(self, name=None, birthday=None,
@@ -189,6 +189,21 @@ class Member(StampedBaseModel):
             return f"{self.birthday:%Y}"
         else:
             return _("Unknown")
+
+    # @property
+    # def father(self):
+    #     bd = self.father.birthday
+    #     n -= 1
+    #     if bd and n>=1:
+    #         bd_year = int(datetime.datetime.db.year)
+
+    #     # print(f"{txt[0]} {year} {now-120} {now-5}" )
+    #         if bd_year in range(self.birthday+16, self.birthday+75):
+    #             return bd
+    #         else:
+    #             raise ValueError(_("Father age not in natural range!"))
+    #     else:
+    #         return self.father
 
     def __str__(self):
         return f"{self.lastname.upper():15s}{self.call_name:24s}  ({self.only_birthday_year})"

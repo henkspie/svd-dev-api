@@ -97,7 +97,7 @@ class model_tests(TestCase):
         self.assertTrue(user.check_password("testpass123"))
 
     def test_adding_member_in_familyTree(self):
-        """Test a member to the family tree is successful."""
+        """Test adding a member to the family tree is successful."""
         user = get_user_model().objects.create_user(
             svdUser='User_19500106',
             password="testpass123",

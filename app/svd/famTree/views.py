@@ -30,7 +30,7 @@ class MemberViewSet(viewsets.ModelViewSet):
         """ Create a new member"""
         serializer.save(editor=self.request.user)
 
-    def get_editor_queryset(self):
+    def get_queryset(self):
         """ Retrieve the members for the editor."""
         return self.queryset.filter(editor=self.request.user).order_by('birthday')
 

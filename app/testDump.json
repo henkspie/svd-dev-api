@@ -1,0 +1,38 @@
+[
+{
+  "model": "core.member",
+  "pk": "1f52aff7-8a11-44fc-a5b2-50490bae7353",
+  "fields": {
+    "created": "2025-01-02T10:41:25.851Z",
+    "modified": "2025-01-02T10:41:25.851Z",
+    "note": "string string",
+    "editor": 61,
+    "firstname": "Henricus",
+    "lastname": "Tester",
+    "call_name": "Henk",
+    "sex": "M",
+    "birthday": "1950-01-06",
+    "birthday_txt": "1950",
+    "father": null,
+    "mother": null
+  }
+},
+{
+  "model": "core.member",
+  "pk": "96c8bcec-3471-4b6f-8cfd-6b9f44d94a9c",
+  "fields": {
+    "created": "2025-01-02T10:26:39.933Z",
+    "modified": "2025-01-02T10:27:06.378Z",
+    "note": "",
+    "editor": 1,
+    "firstname": "Henk",
+    "lastname": "Tester",
+    "call_name": "Henk",
+    "sex": "M",
+    "birthday": "1950-06-01",
+    "birthday_txt": "1950",
+    "father": null,
+    "mother": null
+  }
+}
+]

@@ -12,7 +12,10 @@ from core.models import Member
 from famTree.serializers import MemberSerializer, MemberDetailSerializer
 
 MEMBERS_URL = reverse("famTree:member-list")
-
+DAD_MIN_YEARS = datetime.timedelta(days=17*365)
+DAD_MAX_YEARS = datetime.timedelta(days=62*365)
+MAM_MIN_YEARS = datetime.timedelta(days=15*365)
+MAM_MAX_YEARS = datetime.timedelta(days=49*365)
 
 def detail_url(member_id):
     """ Create and return a member URL."""
@@ -26,13 +29,17 @@ def create_member(user, **params):
         "firstname": "Henricus",
         "call_name": "Henk",
         "sex": "M",
-        "birthday": "1957-01-06",
+        "birthday": datetime.date(1957, 1, 6),
         "birthday_txt": "1957",
-        # "editor": user,
     }
     defaults.update(params)
 
     return Member.objects.create(editor=user, **defaults)
+
+
+def create_user(**params):
+    """ Create and return a new user"""
+    return get_user_model().objects.create_user(**params)
 
 
 class PublicMemberAPITests(TestCase):
@@ -53,12 +60,11 @@ class PrivateMemberAPITest(TestCase):
 
     def setUp(self):
         self.client = APIClient()
-        self.user = get_user_model().objects.create_user(
+        self.user = create_user(
             svdUser="User_19760114",
             password="testpass123",
         )
         self.client.force_authenticate(self.user)
-        # fixtures = ['fixtures/test_members.json']
 
     def test_retrieve_members(self):
         """ Test retrieving a list of members."""
@@ -82,11 +88,11 @@ class PrivateMemberAPITest(TestCase):
 
         res = self.client.get(MEMBERS_URL)
 
-        members = Member.objects.all()          # .order_by("birthday")
+        members = Member.objects.all()        # .order_by("id")
         serializer = MemberSerializer(members, many=True)
-        # print(f"{res.data} / {serializer.data}")
+        # print(f"{res.data} / // / {members}")
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.assertListEqual(res.data, serializer.data)
+        self.assertCountEqual(res.data, serializer.data)
 
     def test_get_member_detail(self):
         """ Test get member detail."""
@@ -102,12 +108,12 @@ class PrivateMemberAPITest(TestCase):
     def test_create_member(self):
         """ Test creating a member with the API."""
         payload = {
-        "lastname": "Tester",
-        "firstname": "Henricus",
-        "call_name": "Henk",
-        "sex": "M",
-        "birthday": datetime.date(1957, 1, 6),
-        "birthday_txt": "1957",
+            "lastname": "Tester",
+            "firstname": "Henricus",
+            "call_name": "Henk",
+            "sex": "M",
+            "birthday": datetime.date(1957, 1, 6),
+            "birthday_txt": "1957",
         }
         res = self.client.post(MEMBERS_URL, payload)
 
@@ -116,3 +122,139 @@ class PrivateMemberAPITest(TestCase):
         for key, value in payload.items():
             self.assertEqual(getattr(member, key), value)
         self.assertEqual(member.editor, self.user)
+
+    def test_partial_update(self):
+        """ Test partial update of a member"""
+        original_data = {"lastname": "Tester", "call_name": "Henk"}
+        member = create_member(
+            user=self.user,
+            lastname=original_data["lastname"],
+            firstname="Hendricus",
+            call_name=original_data["call_name"],
+            sex="M",
+            birthday=datetime.date(1957, 1, 6),
+            birthday_txt="1957",
+        )
+
+        change_name = {"firstname": "Henricus"}
+        url = detail_url(member.id)
+        res = self.client.patch(url, change_name)
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        member.refresh_from_db()
+        self.assertEqual(member.lastname, original_data["lastname"])
+        self.assertEqual(member.call_name, original_data["call_name"])
+        self.assertEqual(member.firstname, change_name["firstname"])
+        self.assertEqual(member.editor, self.user)
+
+    def test_full_update(self):
+        """ Test full update of member."""
+        member = create_member(self.user)
+
+        payload = {
+            "lastname": "User",
+            "firstname": "Johannes",
+            "call_name": "Jan",
+            "sex": "M",
+            "birthday": datetime.date(1917, 11, 26),
+            "birthday_txt": "1917",
+        }
+        url = detail_url(member.id)
+        res = self.client.put(url, payload)
+
+        self.assertEqual(res.status_code,status.HTTP_200_OK)
+        member.refresh_from_db()
+        for key, value in payload.items():
+            self.assertEqual(getattr(member, key), value)
+        self.assertEqual(member.editor, self.user)
+
+    def test_update_user_returns_error(self):
+        """ Test changing the member editor results in an error."""
+        new_user = create_user(
+            svdUser="User_19740114",
+            password="newuserpass123",
+        )
+        member = create_member(user=self.user)
+
+        payload = {"user": new_user.id}
+        url = detail_url(member.id)
+        self.client.patch(url, payload)
+
+        member.refresh_from_db()
+        self.assertEqual(member.editor, self.user)
+
+    def test_delete_member(self):
+        """ Test deleting a member successful."""
+        member = create_member(user=self.user)
+
+        url = detail_url(member.id)
+        res = self.client.delete(url)
+
+        self.assertEqual(res.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(Member.objects.filter(id=member.id).exists())
+
+    def test_delete_other_users_members(self):
+        """ Test trying to delete another users member."""
+        new_user =  create_user(
+            svdUser="User_19700224",
+            password="newuserpass123",
+        )
+        member = create_member(user=new_user)
+
+        url = detail_url(member.id)
+        res = self.client.delete(url)
+
+        self.assertEqual(res.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertTrue(Member.objects.filter(id=member.id).exists())
+
+    def test_father_and_Mother_to_the_member(self):
+        """ Test adding a father and a mother to the member."""
+        member = create_member(user=self.user)
+        mother = Member.objects.create(
+            lastname="Tester",
+            firstname="Frea",
+            call_name="Free",
+            sex="F",
+            birthday= datetime.date(1951, 2, 18),
+            birthday_txt="",
+            editor=self.user)
+        father = Member.objects.create(
+            lastname="Tester",
+            firstname="Johannes",
+            call_name="Jan",
+            sex="M",
+            birthday= datetime.date(1916, 9, 23),
+            birthday_txt="",
+            editor=self.user)
+        payload = {"father": father.id, "mother": mother.id}
+        url = detail_url(member.id)
+        self.client.patch(url, payload)
+
+        member.refresh_from_db()
+        self.assertEqual(member.mother.id, mother.id)
+        self.assertEqual(member.father.lastname, father.lastname)
+        # print(f"Verjaardagen: {member.birthday} {father.birthday}")
+        self.assertLess(father.birthday+DAD_MIN_YEARS, member.birthday)
+        self.assertLess(member.birthday, father.birthday+DAD_MAX_YEARS)
+
+
+class FixTestMembers(TestCase):
+
+    def setUp(self):
+        self.client = APIClient()
+        self.user = get_user_model().objects.get(id=1) # user 1 is needed  to load fixtures
+        self.client.force_authenticate(self.user)
+
+    fixtures = ["fixtures/fix_test_members.json"]
+
+    def test_members_are_loaded(self):
+        """ Test members are loaded from fixtures"""
+        members = Member.objects.all()
+        self.assertEqual(len(members), 7)
+
+        res = self.client.get(MEMBERS_URL)
+
+        serializer = MemberSerializer(members, many=True)
+        # print(f"{res.data} / // / {members}")
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertCountEqual(res.data, serializer.data)

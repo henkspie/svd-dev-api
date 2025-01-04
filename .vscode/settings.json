@@ -4,6 +4,7 @@
         "dockerhub",
         "psycopg",
         "startapp",
-        "svduser"
+        "svduser",
+        "viewsets"
     ]
 }

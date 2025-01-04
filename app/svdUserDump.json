@@ -1,0 +1,87 @@
+[
+{
+  "model": "core.svduser",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$870000$cXIRbqSQLvJELwkXlWoAv0$oYReFg5+6WB/F2cwM94uu1V+yl+cDHAgXi46T3H24AE=",
+    "last_login": "2024-12-22T08:59:29.740Z",
+    "is_superuser": true,
+    "svdUser": "Henk_19500106",
+    "email": "henk@example.com",
+    "name": "",
+    "birthday": "1916-09-23",
+    "is_active": true,
+    "is_staff": true,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "core.svduser",
+  "pk": 58,
+  "fields": {
+    "password": "pbkdf2_sha256$870000$3GBKE49Uona971MYgKD6E3$MwRe1EFgdmcNC4ohlMMnbvP2sFYyK43P6l/tDY1aRBA=",
+    "last_login": null,
+    "is_superuser": false,
+    "svdUser": "Henk_19500206",
+    "email": "user@example.com",
+    "name": "",
+    "birthday": "1916-09-23",
+    "is_active": true,
+    "is_staff": false,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "core.svduser",
+  "pk": 59,
+  "fields": {
+    "password": "pbkdf2_sha256$870000$vhMSXKeA9BKATYclRewLmB$Z5fpND/W+gv7eYG2vGnmwYTIId0XH7wgbIm+EbKauCg=",
+    "last_login": null,
+    "is_superuser": false,
+    "svdUser": "Tester_20061113",
+    "email": "user@example.com",
+    "name": "",
+    "birthday": null,
+    "is_active": true,
+    "is_staff": false,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "core.svduser",
+  "pk": 60,
+  "fields": {
+    "password": "pbkdf2_sha256$870000$NNj5TzEHBhR7O2sNEXXfFI$o5pauHxxzImyAI/SfGtzA65P9MjC6deRGO32rJpKotQ=",
+    "last_login": null,
+    "is_superuser": false,
+    "svdUser": "Tester_20030505",
+    "email": "email@email.com",
+    "name": "Tester",
+    "birthday": "2003-05-05",
+    "is_active": true,
+    "is_staff": false,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "core.svduser",
+  "pk": 61,
+  "fields": {
+    "password": "pbkdf2_sha256$870000$viLSo8Og8fIFDmUqd4u5HT$VuvrZyKwAYafyPtOPyQye8isp0xviZDse8MfBWycla0=",
+    "last_login": null,
+    "is_superuser": false,
+    "svdUser": "Tester_20041115",
+    "email": "Tester@example.com",
+    "name": "",
+    "birthday": null,
+    "is_active": true,
+    "is_staff": false,
+    "groups": [],
+    "user_permissions": []
+  }
+}
+]
