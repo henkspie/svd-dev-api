@@ -6,6 +6,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.translation import gettext_lazy as _
 
 from core import models, forms
+from famTree import forms as memberForm
 
 
 class UserAdmin(BaseUserAdmin):
@@ -57,5 +58,24 @@ class UserAdmin(BaseUserAdmin):
             return _("No Date")
 
 
+class MemberAdmin(admin.ModelAdmin):
+    """ Define the admin for members. """
+    add_form = memberForm.MemberAdminForm
+    ordering = ["birthday"]
+    fieldsets = [
+        (None, {'fields':
+                ["lastname","firstname", "call_name",
+                 "sex", "birthday", "birthday_txt",
+                 "father", "mother"],
+                },
+        ),
+        ( _("Administration"), {"fields":
+                                ("editor", "note", "created", "modified",)
+                                },
+        )
+    ]
+    readonly_fields = ["editor", "created", "modified"]
+
+
 admin.site.register(models.SvdUser, UserAdmin)
-admin.site.register(models.Member)
+admin.site.register(models.Member, MemberAdmin)

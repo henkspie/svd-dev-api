@@ -121,7 +121,7 @@ class Member(StampedBaseModel):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     firstname = models.CharField(
-        _("First name"),
+        _("First name(s)"),
         max_length=63,
         help_text=_(
             "The first name(s) as stated in your passport or ID-card or given at birth"
@@ -186,6 +186,8 @@ class Member(StampedBaseModel):
     def only_birthday_year(self):
         if self.birthday:
             return f"{self.birthday:%Y}"
+        elif self.birthday_txt:
+            return f"{self.birthday_txt}"
         else:
             return _("Unknown")
 
@@ -205,4 +207,4 @@ class Member(StampedBaseModel):
     #         return self.father
 
     def __str__(self):
-        return f"{self.lastname.upper():15s}{self.call_name:24s}  ({self.only_birthday_year})"
+        return f"{self.lastname.upper():15s}{self.call_name:24s} ({self.only_birthday_year})"

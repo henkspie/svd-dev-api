@@ -274,3 +274,15 @@ class FixTestMembers(TestCase):
         svdUser = get_user_model().objects.get(svdUser='Tester_19510218')
         self.assertTrue(svdUser.check_password(payload['password']))
         self.assertNotIn('password', res.data)
+
+    def test_user_is_not_in_members(self):
+        """ Test failure create a user not in members"""
+        payload = {
+            'name': 'Tester',
+            'birthday': '1951-02-17',
+            'email': 'tester@testemail.com',
+            'password': 'testpass123',
+        }
+
+        with self.assertRaisesRegex(ValueError, "You are not in the db"):
+            self.client.post(CREATE_USER_URL, payload)
