@@ -15,7 +15,7 @@ class UserAdmin(BaseUserAdmin):
     ordering = ["svdUser",]
     list_display = ["svdUser", "email"]
     fieldsets = (
-        (None, {'fields': ('svdUser', 'email', 'password')}),
+        (None, {'fields': ('svdUser', 'email', 'password',)}),
         (
             _('Permissions'),
             {
@@ -66,7 +66,7 @@ class MemberAdmin(admin.ModelAdmin):
         (None, {'fields':
                 ["lastname","firstname", "call_name",
                  "sex", "birthday", "birthday_txt",
-                 "father", "mother"],
+                 "father", "mother", "image"],
                 },
         ),
         ( _("Administration"), {"fields":

@@ -4,6 +4,8 @@ Database models
 """
 import datetime
 import uuid
+import os
+
 from django.db import models
 from django.contrib.auth.models import (
     AbstractBaseUser,
@@ -14,6 +16,13 @@ from django.utils.translation import gettext_lazy as _
 
 from .abstract_models import StampedBaseModel
 
+
+def member_image_filepath(instance, filename):
+    """ Generate file path for new member image."""
+    ext = os.path.splitext(filename)[1]
+    filename = f"{uuid.uuid4()}{ext}"
+
+    return os.path.join('uploads', 'members', filename)
 
 def check_normalize_svdUser(name):
     """Check the svdUser name construct is correct."""
@@ -178,6 +187,7 @@ class Member(StampedBaseModel):
         null=True,
         blank=True,
     )
+    image = models.ImageField(null=True, upload_to=member_image_filepath)
 
     class Meta:
         ordering = ["-birthday_txt", "lastname"]

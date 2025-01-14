@@ -1,5 +1,12 @@
 """ Tests for famTree API."""
+
 import datetime
+import os
+import tempfile
+
+from PIL import Image
+
+from unittest.mock import patch
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
@@ -7,6 +14,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 
+from core import models
 from core.models import Member
 
 from famTree.serializers import MemberSerializer, MemberDetailSerializer
@@ -21,6 +29,10 @@ CREATE_USER_URL = reverse('svdUser:create')
 def detail_url(member_id):
     """ Create and return a member URL."""
     return reverse("famTree:member-detail", args=[member_id])
+
+def image_upload_url(member_id):
+    """ Create and return an image URL"""
+    return reverse("famTree:member-upload-image", args=[member_id])
 
 
 def create_member(user, **params):
@@ -238,6 +250,15 @@ class PrivateMemberAPITest(TestCase):
         self.assertLess(father.birthday+DAD_MIN_YEARS, member.birthday)
         self.assertLess(member.birthday, father.birthday+DAD_MAX_YEARS)
 
+    @patch('core.models.uuid.uuid4')
+    def test_member_file_image_uuid(self, mock_uuid):
+        """ Test generating image path"""
+        uuid = 'test-uuid'
+        mock_uuid.return_value = uuid
+        file_path = models.member_image_filepath(None, 'example.jpg')
+
+        self.assertEqual(file_path, f'uploads/members/{uuid}.jpg')
+
 
 class FixTestMembers(TestCase):
 
@@ -286,3 +307,43 @@ class FixTestMembers(TestCase):
 
         with self.assertRaisesRegex(ValueError, "You are not in the db"):
             self.client.post(CREATE_USER_URL, payload)
+
+
+class ImageUploadTests(TestCase):
+    """ Tests for the image upload API."""
+
+    def setUp(self):
+        self.client = APIClient()
+        self.user = get_user_model().objects.create_user(
+            svdUser = "Tester_19500106",
+            password = 'testpass123'
+        )
+        self.client.force_authenticate(self.user)
+        self.member = create_member(user=self.user)
+
+    def tearTown(self):
+        self.member.image.delete()
+
+    def test_upload_image(self):
+        """ Test uploading an image to a member"""
+        url = image_upload_url(self.member.id)
+        with tempfile.NamedTemporaryFile(suffix=".jpg") as image_file:
+            img = Image.new("RGB", (10, 10))
+            img.save(image_file, format="JPEG")
+            image_file.seek(0)
+            payload = {"image": image_file}
+            res = self.client.post(url, payload, format="multipart")
+
+        self.member.refresh_from_db()
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertIn("image", res.data)
+        self.assertTrue(os.path.exists(self.member.image.path))
+
+
+    def test_upload_image_bad_request(self):
+        """Test uploading invalid image."""
+        url = image_upload_url(self.member.id)
+        payload = {"image": "notanimage"}
+        res = self.client.post(url, payload, format="multipart")
+
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)

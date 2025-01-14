@@ -2,6 +2,8 @@
 psycopg[c]>=3               # https://www.psycopg.org/psycopg3/docs/basic/index.html
 
 
+Pillow>=11.1.0,<12.0                # https://pypi.org/project/pillow/
+
 # Django
 # ----------------------------------
 django>5.1.1,<5.2                   # https://www.djangoproject.com/

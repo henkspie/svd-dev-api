@@ -44,3 +44,14 @@ class MemberDetailSerializer(MemberSerializer):
 
     class Meta(MemberSerializer.Meta):
         fields = MemberSerializer.Meta.fields + ['note', 'editor']
+
+
+class MemberImageSerializer(serializers.ModelSerializer):
+    """Serializer for uploading images to member."""
+
+    class Meta:
+        model = Member
+        fields = ['id', 'image']
+        read_only_fields = ['id']
+        extra_kwargs = {'image': {'required': 'True'}}
+
