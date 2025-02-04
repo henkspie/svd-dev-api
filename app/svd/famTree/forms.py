@@ -11,8 +11,7 @@ from django.utils.translation import gettext_lazy as _
 class MemberAdminForm(forms.ModelForm):
     """ Form for customizing member input in admin"""
     # print("I am in svdUserAdminForm")
-    lastname = forms.CharField(max_length=63,
-                           help_text=_("Use your family name."))
+    lastname = forms.CharField(max_length=63, help_text=_("Use your family name."))
 
     class Meta:
         model = Member
@@ -33,4 +32,3 @@ class MemberAdminForm(forms.ModelForm):
             return False
 
         return member
-

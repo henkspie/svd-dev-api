@@ -6,7 +6,7 @@ import datetime
 import uuid
 import os
 
-from django.db import models
+from django.db import models    # noqa: F401
 from django.contrib.auth.models import (
     AbstractBaseUser,
     BaseUserManager,
@@ -23,6 +23,7 @@ def member_image_filepath(instance, filename):
     filename = f"{uuid.uuid4()}{ext}"
 
     return os.path.join('uploads', 'members', filename)
+
 
 def check_normalize_svdUser(name):
     """Check the svdUser name construct is correct."""

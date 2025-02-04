@@ -6,11 +6,12 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.test import Client
 
-from core.models import Member
+from core.models import Member  # noqa: F401
 
-from famTree.serializers import MemberSerializer
+from famTree.serializers import MemberSerializer     # noqa: F401
 
 MEMBERS_URL = reverse("famTree:member-list")
+
 
 class AdminSiteTests(TestCase):
     """ Django admin tests."""
@@ -65,7 +66,7 @@ class AdminSiteTests(TestCase):
     def test_user_is_members(self):
         """ Test that the user is in the members db"""
         # def setUp(self):
-        fixtures = ["fix_test_members.json"]
+        fixtures = ["fix_test_members.json"]  # noqa: F841
         pass
 
         # res = self.client.get(MEMBERS_URL)
@@ -75,4 +76,3 @@ class AdminSiteTests(TestCase):
         # print(f"{res.data} / {serializer.data}")
         # self.assertEqual(res.status_code, 200)
         # self.assertCountEqual(res.data, serializer.data)
-

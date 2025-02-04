@@ -26,9 +26,11 @@ MAM_MIN_YEARS = datetime.timedelta(days=15*365)
 MAM_MAX_YEARS = datetime.timedelta(days=49*365)
 CREATE_USER_URL = reverse('svdUser:create')
 
+
 def detail_url(member_id):
     """ Create and return a member URL."""
     return reverse("famTree:member-detail", args=[member_id])
+
 
 def image_upload_url(member_id):
     """ Create and return an image URL"""
@@ -175,7 +177,7 @@ class PrivateMemberAPITest(TestCase):
         url = detail_url(member.id)
         res = self.client.put(url, payload)
 
-        self.assertEqual(res.status_code,status.HTTP_200_OK)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
         member.refresh_from_db()
         for key, value in payload.items():
             self.assertEqual(getattr(member, key), value)
@@ -208,7 +210,7 @@ class PrivateMemberAPITest(TestCase):
 
     def test_delete_other_users_members(self):
         """ Test trying to delete another users member."""
-        new_user =  create_user(
+        new_user = create_user(
             svdUser="User_19700224",
             password="newuserpass123",
         )
@@ -228,7 +230,7 @@ class PrivateMemberAPITest(TestCase):
             firstname="Frea",
             call_name="Free",
             sex="F",
-            birthday= datetime.date(1951, 2, 18),
+            birthday=datetime.date(1951, 2, 18),
             birthday_txt="",
             editor=self.user)
         father = Member.objects.create(
@@ -236,7 +238,7 @@ class PrivateMemberAPITest(TestCase):
             firstname="Johannes",
             call_name="Jan",
             sex="M",
-            birthday= datetime.date(1916, 9, 23),
+            birthday=datetime.date(1916, 9, 23),
             birthday_txt="",
             editor=self.user)
         payload = {"father": father.id, "mother": mother.id}
@@ -264,7 +266,7 @@ class FixTestMembers(TestCase):
 
     def setUp(self):
         self.client = APIClient()
-        self.user = get_user_model().objects.get(id=1) # user 1 is needed  to load fixtures
+        self.user = get_user_model().objects.get(id=1)  # user 1 is needed  to load fixtures
         self.client.force_authenticate(self.user)
 
     fixtures = ["fixtures/fix_test_members.json"]
@@ -315,8 +317,8 @@ class ImageUploadTests(TestCase):
     def setUp(self):
         self.client = APIClient()
         self.user = get_user_model().objects.create_user(
-            svdUser = "Tester_19500106",
-            password = 'testpass123'
+            svdUser="Tester_19500106",
+            password='testpass123'
         )
         self.client.force_authenticate(self.user)
         self.member = create_member(user=self.user)
@@ -338,7 +340,6 @@ class ImageUploadTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertIn("image", res.data)
         self.assertTrue(os.path.exists(self.member.image.path))
-
 
     def test_upload_image_bad_request(self):
         """Test uploading invalid image."""

@@ -2,13 +2,13 @@
 Views for the member APIs.
 """
 
-from drf_spectacular.utils import (
-    extend_schema_view,
+from drf_spectacular.utils import (     # noqa: F401
     extend_schema,
+    extend_schema_view,
     OpenApiParameter,
     OpenApiTypes,
 )
-from rest_framework import viewsets, mixins, status
+from rest_framework import viewsets, mixins, status     # noqa: F401
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication

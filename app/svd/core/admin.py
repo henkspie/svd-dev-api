@@ -64,15 +64,11 @@ class MemberAdmin(admin.ModelAdmin):
     ordering = ["birthday"]
     fieldsets = [
         (None, {'fields':
-                ["lastname","firstname", "call_name",
+                ["lastname", "firstname", "call_name",
                  "sex", "birthday", "birthday_txt",
-                 "father", "mother", "image"],
-                },
-        ),
-        ( _("Administration"), {"fields":
-                                ("editor", "note", "created", "modified",)
-                                },
-        )
+                 "father", "mother", "image"], }, ),
+        (_("Administration"), {"fields":
+                               ["editor", "note", "created", "modified",]}, )
     ]
     readonly_fields = ["editor", "created", "modified"]
 
