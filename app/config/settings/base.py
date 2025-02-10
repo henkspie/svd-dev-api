@@ -44,6 +44,7 @@ THIRD_PARTY_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "drf_spectacular",
+    "django_countries",
 ]
 
 PROJECT_APPS = ["svd.core.apps.CoreConfig",
@@ -156,3 +157,5 @@ REST_FRAMEWORK = {
 SPECTACULAR_SETTINGS = {
     'COMPONENT_SPLIT_REQUEST': True,
 }
+
+# COUNTRIES_ONLY = ["NL","GB","IRL"]
