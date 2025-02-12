@@ -1,22 +1,24 @@
 """
 Tests for models
 """
+import datetime as dt
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 # from django.test import Client
 
 from core.models import Member
+from famTree.models import Event
 
 test_members = [
     {
         "firstname": "Jan Karel",
-        "name": "User",
-        "birthday": "1958-01-06",
+        "lastname": "User",
+        "birthday": dt.date(1958, 1, 6),
     },
     {
         "firstname": "None",
-        "name": "Tester",
-        "birthday": "1950-01-06",
+        "lastname": "Tester",
+        "birthday": dt.date(1950, 1, 6),
     }
 ]
 
@@ -114,4 +116,26 @@ class model_tests(TestCase):
         self.assertEqual(member.editor, user)
 
     def test_svdUser_is_in_member_db(self):
+        user = get_user_model().objects.create_user(
+            svdUser='User_19500106',
+            password="testpass123",
+        )
+        for kwargs in test_members:
+            kwargs['editor'] = user
+            # print(kwargs)
+            Member.objects.create(**kwargs)
+            # print(x)
         pass
+
+    def test_create_event(self):
+        user = get_user_model().objects.create_user(
+            svdUser='User_19500106',
+            password="testpass123",
+        )
+        event = Event.objects.create(
+            event_type="birth",
+            date=dt.date(1967, 8, 9),
+            editor=user,
+        )
+
+        self.assertEqual(str(event), event.event_type)
