@@ -4,6 +4,16 @@ Serializers for famTree API's.
 from rest_framework import serializers
 
 from core.models import Member
+from famTree.models import Event
+
+
+class Event(serializers.ModelSerializer):
+    """ Serializer for event"""
+
+    class Meta:
+        model = Event
+        fields = ["id", "event_type", "date", "place"]
+        read_ony_fields = ["id"]
 
 
 class MemberSerializer(serializers.ModelSerializer):
@@ -27,6 +37,9 @@ class MemberSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         """ Create a member."""
+        # events = validated_data.pop("event", [])
+        auth_user = self.context["request"].user
+        validated_data["editor"] = auth_user
         return Member.objects.create(**validated_data)
 
     # def update(self, instance, validated_data):

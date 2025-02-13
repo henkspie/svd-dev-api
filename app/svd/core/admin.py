@@ -19,6 +19,7 @@ class UserAdmin(BaseUserAdmin):
         (
             _('Permissions'),
             {
+
                 'fields': (
                     'is_active',
                     'is_staff',
@@ -26,14 +27,13 @@ class UserAdmin(BaseUserAdmin):
                 )
             }
         ),
-        (_('Important dates'), {'fields': ['last_login', ]}),
+        (_('Important dates'), {'classes': ['collapse'], 'fields': ('last_login', )}),
     )
     readonly_fields = ['last_login', "svdUser"]
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
             'fields': (
-                # 'svdUser',
                 'birthday',
                 'name',
                 'email',
@@ -64,13 +64,19 @@ class MemberAdmin(admin.ModelAdmin):
     ordering = ["birthday"]
     fieldsets = [
         (None, {'fields':
-                ["lastname", "firstname", "call_name",
-                 "sex", "birthday", "birthday_txt",
+                ["lastname", ("firstname", "call_name"),
+                 ("birthday", "birthday_txt"), "sex",
                  "father", "mother", "image"], }, ),
-        (_("Administration"), {"fields":
-                               ["editor", "note", "created", "modified",]}, )
+        (_("Administration"), {
+            "classes": ["collapse"],
+            "fields":
+                ["editor", "note", "created", "modified",]}, )
     ]
     readonly_fields = ["editor", "created", "modified"]
+
+    def save_model(self, request, obj, form, change):
+        obj.editor = request.user
+        return super().save_model(request, obj, form, change)
 
 
 admin.site.register(models.SvdUser, UserAdmin)

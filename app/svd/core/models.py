@@ -188,7 +188,7 @@ class Member(StampedBaseModel):
         null=True,
         blank=True,
     )
-    image = models.ImageField(null=True, upload_to=member_image_filepath)
+    image = models.ImageField(null=True, blank=True, upload_to=member_image_filepath)
 
     class Meta:
         ordering = ["-birthday_txt", "lastname"]

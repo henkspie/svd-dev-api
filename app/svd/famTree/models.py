@@ -14,14 +14,20 @@ class EventList(models.Model):
     """
     event_type = models.CharField(_("Event type"), max_length=15)
 
+    def __str__(self):
+        return self.event_type
+
 
 def get_event_types():
-    event_list = [("birth", _("birth")), ("dead", _("dead")),]
+    event_list = [("birth", _("Birth")), ("DEATH", _("Death")),]
     query = EventList.objects.all()
+    print(query)
     if query:
         for i in range(len(query)):
-            event = query[i]
-            event_list.append(event, _(event))
+            event = str(query[i])
+            trans_event = _(event)
+            event_list.append((event.upper(), trans_event))
+            print(event_list)
     return event_list
 
 
