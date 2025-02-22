@@ -11,7 +11,7 @@ from famTree import views
 
 router = DefaultRouter()
 router.register("members", views.MemberViewSet)
-# router.register("tags", views.TagViewSet)
+router.register("events", views.EventViewSet)
 # router.register("ingredients", views.IngredientViewSet)
 
 app_name = "famTree"

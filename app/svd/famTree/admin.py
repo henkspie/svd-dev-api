@@ -9,7 +9,8 @@ class EventAdmin(admin.ModelAdmin):
     ordering = ['member', 'date']
     list_display = ['member', 'date', 'event_type']
     fieldsets = (
-        (None, {'fields': ('member', 'date', 'event_type', 'place', 'note',)}),
+        (None, {'fields':
+                ('member', 'date', 'event_type', 'place', 'source', 'note',)}),
         (_('Administration'), {
             'classes': ["collapse",],
             'fields': ['editor', 'created', 'modified',]

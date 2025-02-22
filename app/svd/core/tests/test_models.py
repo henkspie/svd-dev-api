@@ -132,8 +132,15 @@ class model_tests(TestCase):
             svdUser='User_19500106',
             password="testpass123",
         )
+        member = Member.objects.create(
+            firstname="Jan Karel",
+            lastname="tester",
+            birthday="1958-01-06",
+            editor=user)
+
         event = Event.objects.create(
-            event_type="birth",
+            member=member,
+            event_type="BIRTH",
             date=dt.date(1967, 8, 9),
             editor=user,
         )

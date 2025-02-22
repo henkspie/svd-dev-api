@@ -15,6 +15,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
 from core.models import Member
+from famTree.models import Event
 from famTree import serializers
 
 
@@ -30,9 +31,9 @@ class MemberViewSet(viewsets.ModelViewSet):
         """ Create a new member"""
         serializer.save(editor=self.request.user)
 
-    def get_queryset(self):
-        """ Retrieve the members for the editor."""
-        return self.queryset.filter(editor=self.request.user).order_by('birthday')
+    # def get_queryset(self):
+    #     """ Retrieve the members for the editor."""
+    #     return self.queryset.all().order_by('birthday')
 
     def get_serializer_class(self):
         """ Return the serializer class for request"""
@@ -54,3 +55,9 @@ class MemberViewSet(viewsets.ModelViewSet):
             return Response(serializer.data, status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class EventViewSet(viewsets.ModelViewSet):
+    """ Manage events in the database """
+    serializer_class = serializers.EventSerializer
+    queryset = Event.objects.all()

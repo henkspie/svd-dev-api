@@ -5,7 +5,7 @@ from django.db import models
 from core.abstract_models import StampedBaseModel
 from django.utils.translation import gettext_lazy as _
 
-from core.models import Member
+from core.models import Member, member_image_filepath
 
 
 class EventList(models.Model):
@@ -19,15 +19,15 @@ class EventList(models.Model):
 
 
 def get_event_types():
-    event_list = [("birth", _("Birth")), ("DEATH", _("Death")),]
+    event_list = [("BIRTH", _("Birth")), ("DEATH", _("Death")),]
     query = EventList.objects.all()
-    print(query)
+    # print(query)
     if query:
         for i in range(len(query)):
             event = str(query[i])
             trans_event = _(event)
             event_list.append((event.upper(), trans_event))
-            print(event_list)
+            # print(event_list)
     return event_list
 
 
@@ -35,13 +35,12 @@ class Event(StampedBaseModel):
     """ Event happening in somebodies life. """
     event_type = models.CharField(max_length=15, choices=get_event_types)
     date = models.DateField(_("Date of the event"))
-    place = models.CharField(_("Place where the Event happened"))
+    end_date = models.DateField(_("End date of the event"), null=True, blank=True)
     source = models.ManyToManyField("Source")
+    image = models.ImageField(null=True, blank=True, upload_to=member_image_filepath)
     member = models.ForeignKey(
         to=Member,
         on_delete=models.CASCADE,
-        null=True,
-        blank=True
     )
 
     def __str__(self):
@@ -54,3 +53,28 @@ class Source(models.Model):
 
     def __str__(self):
         return self.source_type
+
+
+class Location(models.Model):
+    """ Storage of documents etc """
+    name = models.CharField(_("Name of the location"), max_length=15)
+    city = models.CharField(_("Name of the town"), max_length=15, null=True, blank=True)
+    street = models.CharField(_("Street"), max_length=127, null=True, blank=True)
+    number = models.CharField(_("House or Apartment number"), max_length=15, null=True, blank=True)
+    postal_code = models.CharField(_("Postal Code"), max_length=15, null=True, blank=True)
+    country = models.CharField(_("Country"), max_length=15, default=_("Netherlands"))
+    Event = models.ForeignKey(
+        to="Event",
+        on_delete=models.DO_NOTHING,
+        )
+    long = models.DecimalField(_("GPS Longitude"),
+                               max_digits=9, decimal_places=6, null=True, blank=True)
+    lat = models.DecimalField(_("GPS Latitude"),
+                              max_digits=9, decimal_places=6, null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
+    @property
+    def address(self):
+        return f"{self.street}, {self.number}, {self.city}, {self.postal_code}"
