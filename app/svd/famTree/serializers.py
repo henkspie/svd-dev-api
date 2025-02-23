@@ -12,7 +12,7 @@ class EventSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Event
-        fields = ["id", "member", "event_type", "date", "place", "source"]
+        fields = ["id", "member", "event_type", "date", "source"]
         read_ony_fields = ["id"]
 
 

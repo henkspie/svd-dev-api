@@ -31,6 +31,27 @@ def get_event_types():
     return event_list
 
 
+class Location(models.Model):
+    """ Storage of documents etc """
+    name = models.CharField(_("Name of the location"), max_length=15)
+    city = models.CharField(_("Name of the town"), max_length=15, null=True, blank=True)
+    street = models.CharField(_("Street"), max_length=127, null=True, blank=True)
+    number = models.CharField(_("House or Apartment number"), max_length=15, null=True, blank=True)
+    postal_code = models.CharField(_("Postal Code"), max_length=15, null=True, blank=True)
+    country = models.CharField(_("Country"), max_length=15, default=_("Netherlands"))
+    long = models.DecimalField(_("GPS Longitude"),
+                               max_digits=9, decimal_places=6, null=True, blank=True)
+    lat = models.DecimalField(_("GPS Latitude"),
+                              max_digits=9, decimal_places=6, null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
+    @property
+    def address(self):
+        return f"{self.street}, {self.number}, {self.city}, {self.postal_code}"
+
+
 class Event(StampedBaseModel):
     """ Event happening in somebodies life. """
     event_type = models.CharField(max_length=15, choices=get_event_types)
@@ -41,6 +62,13 @@ class Event(StampedBaseModel):
     member = models.ForeignKey(
         to=Member,
         on_delete=models.CASCADE,
+    )
+    location = models.ForeignKey(
+        to=Location,
+        on_delete=models.DO_NOTHING,
+        help_text=_(f"Location where {member} was/is {event_type}"),
+        null=True,
+        blank=True,
     )
 
     def __str__(self):
@@ -53,28 +81,3 @@ class Source(models.Model):
 
     def __str__(self):
         return self.source_type
-
-
-class Location(models.Model):
-    """ Storage of documents etc """
-    name = models.CharField(_("Name of the location"), max_length=15)
-    city = models.CharField(_("Name of the town"), max_length=15, null=True, blank=True)
-    street = models.CharField(_("Street"), max_length=127, null=True, blank=True)
-    number = models.CharField(_("House or Apartment number"), max_length=15, null=True, blank=True)
-    postal_code = models.CharField(_("Postal Code"), max_length=15, null=True, blank=True)
-    country = models.CharField(_("Country"), max_length=15, default=_("Netherlands"))
-    Event = models.ForeignKey(
-        to="Event",
-        on_delete=models.DO_NOTHING,
-        )
-    long = models.DecimalField(_("GPS Longitude"),
-                               max_digits=9, decimal_places=6, null=True, blank=True)
-    lat = models.DecimalField(_("GPS Latitude"),
-                              max_digits=9, decimal_places=6, null=True, blank=True)
-
-    def __str__(self):
-        return self.name
-
-    @property
-    def address(self):
-        return f"{self.street}, {self.number}, {self.city}, {self.postal_code}"
