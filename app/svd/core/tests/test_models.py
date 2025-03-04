@@ -137,7 +137,6 @@ class model_tests(TestCase):
         self.assertEqual(user.svdUser, "Tester_19500106")
         self.assertTrue(user.check_password("testpass123"))
 
-
     def test_create_event(self):
         user = get_user_model().objects.create_user(
             svdUser='User_19500106',

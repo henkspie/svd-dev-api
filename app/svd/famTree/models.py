@@ -31,8 +31,6 @@ def get_event_types():
     return event_list
 
 
-
-
 class Events(StampedBaseModel):
     """ Event happening in somebodies life. """
     event_type = models.CharField(max_length=15, choices=get_event_types)

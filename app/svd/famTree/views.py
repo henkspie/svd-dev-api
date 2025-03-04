@@ -18,9 +18,10 @@ from core.models import Member
 from famTree.models import Events, Location
 from famTree import serializers
 
+
 def _params_to_ints(self, qs):
-        """Convert a list of strings to integers."""
-        return [int(str_id) for str_id in qs.split(",")]
+    """Convert a list of strings to integers."""
+    return [int(str_id) for str_id in qs.split(",")]
 
 
 class MemberViewSet(viewsets.ModelViewSet):
@@ -32,7 +33,7 @@ class MemberViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        """ Create a new member""" # @property
+        """ Create a new member"""  # @property
         serializer.save(editor=self.request.user)
 
     def perform_destroy(self, instance):

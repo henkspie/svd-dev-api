@@ -12,7 +12,8 @@ class LocationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Location
-        fields = ["id" , "name", "city", "street", "number", "postal_code", "country", "lat", "long"]
+        fields = ["id", "name", "city", "street", "number",
+                  "postal_code", "country", "lat", "long"]
         read_ony_fields = ["id"]
 
     def create(self, validated_data):
@@ -87,7 +88,7 @@ class MemberSerializer(serializers.ModelSerializer):
         validated_data["editor"] = auth_user
 
         if events is not None:
-            instance,events.clear()
+            instance.events.clear()
             self._get_or_create_events(events, instance, auth_user)
 
         for attr, value in validated_data.items():
