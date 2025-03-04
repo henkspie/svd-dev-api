@@ -34,6 +34,7 @@ def check_normalize_svdUser(name):
         now = int(datetime.datetime.now().year)
         # print(f"{txt[0]} {year} {now-120} {now-5}" )
         if year in range(now-110, now-5):
+            # print(f"{txt[0]} {range(now-120, now-5)}" )
             return f"{txt[0].capitalize()}_{txt[1]}"
 
     raise NameError(_("Not a correct svdUser name given."))
@@ -62,10 +63,10 @@ class SvdUserManager(BaseUserManager):
         """Create, save and return a new user."""
         # If name is given than the new user is requested by HTML.
         # Tests and admin will not be checked on existence in member:
-        #   Tests if 'example.com' is included in the email address.
+        #   Tests if 'exxxample.com' is included in the email address.
         #   Admin will not use this routine.
         if name:
-            if "example.com" not in email:
+            if "exxxample.com" not in email:
                 check_svdUser_in_members(name, birthday)
             date = str(birthday)
             date = date[:4]+date[5:7]+date[8:]

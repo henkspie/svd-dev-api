@@ -28,7 +28,7 @@ class PublicUserApiTests(TestCase):
     def test_create_svdUer_success(self):
         """ Test creating a svdUser is successful"""
         payload = {
-            'email': 'test@example.com',
+            'email': 'test@exxxample.com',
             'password': 'testpass123',
             'name': 'Tester',
             'birthday': '1976-01-14',
@@ -43,7 +43,7 @@ class PublicUserApiTests(TestCase):
     def test_svdUser_is_unique(self):
         """  Test error returned if svdUser exists."""
         payload = {
-            'email': 'test@example.com',
+            'email': 'test@exxxample.com',
             'name': "Tester",
             'birthday': "1976-01-14",
             'password': 'testpass123',
@@ -58,7 +58,7 @@ class PublicUserApiTests(TestCase):
     def test_password_too_short_error(self):
         """ Test an error is returned if password is too short."""
         payload = {
-            'email': 'test@example.com',
+            'email': 'test@exxxample.com',
             'name': 'Tester',
             'birthday': '1976-01-14',
             'password': 'tes123',
@@ -76,7 +76,7 @@ class PublicUserApiTests(TestCase):
         svdUser_details = {
             'name': 'Tester',
             'birthday': '1976-01-14',
-            'email': 'tester@example.com',
+            'email': 'tester@exxxample.com',
             'password': 'testpass123',
         }
         create_svdUser(**svdUser_details)
@@ -95,7 +95,7 @@ class PublicUserApiTests(TestCase):
         credentials = {
             'name': 'Tester',
             'birthday': '1976-01-14',
-            'email': 'tester@example.com',
+            'email': 'tester@exxxample.com',
             'password': 'goodpass123',
         }
         create_svdUser(**credentials)
@@ -114,7 +114,7 @@ class PublicUserApiTests(TestCase):
         credentials = {
             'name': 'Tester',
             'birthday': '1976-01-14',
-            'email': 'tester@example.com',
+            'email': 'tester@exxxample.com',
             'password': 'goodpass123',
         }
         create_svdUser(**credentials)
@@ -142,7 +142,7 @@ class PrivateUserApiTests(TestCase):
         self.user = create_svdUser(
             name='Tester',
             birthday='1976-01-14',
-            email='tester@example.com',
+            email='tester@exxxample.com',
             password='testpass123',
         )
         self.client = APIClient()

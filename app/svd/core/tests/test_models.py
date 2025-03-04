@@ -7,7 +7,7 @@ from django.contrib.auth import get_user_model
 # from django.test import Client
 
 from core.models import Member
-from famTree.models import Event
+from famTree.models import Events
 
 test_members = [
     {
@@ -92,7 +92,7 @@ class model_tests(TestCase):
             name="Tester",
             birthday="1976-01-14",
             password="testpass123",
-            email="Tester@example.com"
+            email="Tester@exxxample.com"
         )
 
         self.assertEqual(user.svdUser, "Tester_19760114")
@@ -125,7 +125,18 @@ class model_tests(TestCase):
             # print(kwargs)
             Member.objects.create(**kwargs)
             # print(x)
-        pass
+
+        user = get_user_model().objects.create_user(
+            # test = True,
+            name="Tester",
+            birthday="1950-01-06",
+            password="testpass123",
+            email="Tester@me.com"
+        )
+
+        self.assertEqual(user.svdUser, "Tester_19500106")
+        self.assertTrue(user.check_password("testpass123"))
+
 
     def test_create_event(self):
         user = get_user_model().objects.create_user(
@@ -138,11 +149,19 @@ class model_tests(TestCase):
             birthday="1958-01-06",
             editor=user)
 
-        event = Event.objects.create(
+        event1 = Events.objects.create(
             member=member,
             event_type="BIRTH",
             date=dt.date(1967, 8, 9),
             editor=user,
         )
 
-        self.assertEqual(str(event), event.event_type)
+        event2 = Events.objects.create(
+            member=member,
+            event_type="DEATH",
+            date=dt.date(2047, 8, 9),
+            editor=user,
+        )
+
+        self.assertEqual(str(event1), event1.event_type)
+        self.assertEqual(str(event2), event2.event_type)

@@ -15,8 +15,12 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
 from core.models import Member
-from famTree.models import Event
+from famTree.models import Events, Location
 from famTree import serializers
+
+def _params_to_ints(self, qs):
+        """Convert a list of strings to integers."""
+        return [int(str_id) for str_id in qs.split(",")]
 
 
 class MemberViewSet(viewsets.ModelViewSet):
@@ -28,12 +32,25 @@ class MemberViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        """ Create a new member"""
+        """ Create a new member""" # @property
         serializer.save(editor=self.request.user)
 
-    # def get_queryset(self):
-    #     """ Retrieve the members for the editor."""
-    #     return self.queryset.all().order_by('birthday')
+    def perform_destroy(self, instance):
+        if instance.editor == self.request.user:
+            # print("Delete")
+            instance.delete()
+        # print("Not delete")
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    def get_queryset(self):
+        """ Retrieve all members and events."""
+        events = self.request.query_params.get("Events")
+        queryset = self.queryset
+        if events:
+            event_ids = self._params_to_ints(events)
+            queryset = queryset.filter(event__id__in=event_ids)
+
+        return queryset.order_by('birthday')
 
     def get_serializer_class(self):
         """ Return the serializer class for request"""
@@ -60,4 +77,14 @@ class MemberViewSet(viewsets.ModelViewSet):
 class EventViewSet(viewsets.ModelViewSet):
     """ Manage events in the database """
     serializer_class = serializers.EventSerializer
-    queryset = Event.objects.all()
+    queryset = Events.objects.all()
+
+    def perform_create(self, serializer):
+        """ Create a new event"""
+        serializer.save(editor=self.request.user)
+
+
+class LocationViewSet(viewsets.ModelViewSet):
+    """ Manage events in the database """
+    serializer_class = serializers.LocationSerializer
+    queryset = Location.objects.all()

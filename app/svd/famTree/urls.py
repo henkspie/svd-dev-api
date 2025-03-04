@@ -12,6 +12,7 @@ from famTree import views
 router = DefaultRouter()
 router.register("members", views.MemberViewSet)
 router.register("events", views.EventViewSet)
+router.register("location", views.LocationViewSet)
 # router.register("ingredients", views.IngredientViewSet)
 
 app_name = "famTree"

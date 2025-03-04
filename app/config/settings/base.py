@@ -156,6 +156,9 @@ REST_FRAMEWORK = {
 
 SPECTACULAR_SETTINGS = {
     'COMPONENT_SPLIT_REQUEST': True,
+    'TITLE': "SvD",
+    'VERSION': '0.1.0',
+    'CONTACT': {'name': 'Henk Spierings', 'email': 'tester@exxxample.com'},
 }
 
 # COUNTRIES_ONLY = ["NL","GB","IRL"]

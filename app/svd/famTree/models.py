@@ -2,7 +2,7 @@
 Svd database event and health models
 """
 from django.db import models
-from core.abstract_models import StampedBaseModel
+from core.abstract_models import StampedBaseModel, TimeStampedModel
 from django.utils.translation import gettext_lazy as _
 
 from core.models import Member, member_image_filepath
@@ -31,10 +31,28 @@ def get_event_types():
     return event_list
 
 
-class Location(models.Model):
+
+
+class Events(StampedBaseModel):
+    """ Event happening in somebodies life. """
+    event_type = models.CharField(max_length=15, choices=get_event_types)
+    date = models.DateField(_("Date of the event"))
+    end_date = models.DateField(_("End date of the event"), null=True, blank=True)
+    source = models.ManyToManyField("Source", blank=True)
+    image = models.ImageField(null=True, blank=True, upload_to=member_image_filepath)
+    member = models.ForeignKey(
+        to=Member,
+        on_delete=models.CASCADE,
+    )
+
+    def __str__(self):
+        return self.event_type
+
+
+class Location(TimeStampedModel):
     """ Storage of documents etc """
-    name = models.CharField(_("Name of the location"), max_length=15)
-    city = models.CharField(_("Name of the town"), max_length=15, null=True, blank=True)
+    name = models.CharField(_("Name of the location"), max_length=31, unique=True)
+    city = models.CharField(_("Name of the town"), max_length=31, null=True, blank=True)
     street = models.CharField(_("Street"), max_length=127, null=True, blank=True)
     number = models.CharField(_("House or Apartment number"), max_length=15, null=True, blank=True)
     postal_code = models.CharField(_("Postal Code"), max_length=15, null=True, blank=True)
@@ -43,6 +61,14 @@ class Location(models.Model):
                                max_digits=9, decimal_places=6, null=True, blank=True)
     lat = models.DecimalField(_("GPS Latitude"),
                               max_digits=9, decimal_places=6, null=True, blank=True)
+    events = models.ForeignKey(
+        to=Events,
+        on_delete=models.DO_NOTHING,
+        related_name=_("Location"),
+        # help_text=_(f"Location where {member} was/is {event_type}"),
+        null=True,
+        blank=True,
+    )
 
     def __str__(self):
         return self.name
@@ -50,29 +76,6 @@ class Location(models.Model):
     @property
     def address(self):
         return f"{self.street}, {self.number}, {self.city}, {self.postal_code}"
-
-
-class Event(StampedBaseModel):
-    """ Event happening in somebodies life. """
-    event_type = models.CharField(max_length=15, choices=get_event_types)
-    date = models.DateField(_("Date of the event"))
-    end_date = models.DateField(_("End date of the event"), null=True, blank=True)
-    source = models.ManyToManyField("Source")
-    image = models.ImageField(null=True, blank=True, upload_to=member_image_filepath)
-    member = models.ForeignKey(
-        to=Member,
-        on_delete=models.CASCADE,
-    )
-    location = models.ForeignKey(
-        to=Location,
-        on_delete=models.DO_NOTHING,
-        help_text=_(f"Location where {member} was/is {event_type}"),
-        null=True,
-        blank=True,
-    )
-
-    def __str__(self):
-        return self.event_type
 
 
 class Source(models.Model):

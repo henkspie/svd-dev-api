@@ -4,14 +4,39 @@ Serializers for famTree API's.
 from rest_framework import serializers
 
 from core.models import Member
-from famTree.models import Event
+from famTree.models import Events, Location
+
+
+class LocationSerializer(serializers.ModelSerializer):
+    """ Serializer for location"""
+
+    class Meta:
+        model = Location
+        fields = ["id" , "name", "city", "street", "number", "postal_code", "country", "lat", "long"]
+        read_ony_fields = ["id"]
+
+    def create(self, validated_data):
+        """ Create a member."""
+        events = validated_data.pop("event", [])
+        auth_user = self.context["request"].user
+        validated_data["editor"] = auth_user
+        member = Member.objects.create(**validated_data)
+        for event in events:
+            Events.objects.get_or_create(
+                editor=auth_user,
+                **event,
+            )
+            # member.events.add(event_obj)
+
+        return member
 
 
 class EventSerializer(serializers.ModelSerializer):
     """ Serializer for event"""
+    # location = LocationSerializer(required=False)
 
     class Meta:
-        model = Event
+        model = Events
         fields = ["id", "member", "event_type", "date", "source"]
         read_ony_fields = ["id"]
 
@@ -36,29 +61,40 @@ class MemberSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ["id"]
 
-    def create(self, validated_data):
-        """ Create a member."""
-        events = validated_data.pop("event", [])
-        auth_user = self.context["request"].user
-        validated_data["editor"] = auth_user
-        member = Member.objects.create(**validated_data)
+    def _get_or_create_events(self, events, member, auth_user):
+
         for event in events:
-            Event.objects.get_or_create(
+            event_obj = Events.objects.get_or_create(
                 editor=auth_user,
                 **event,
             )
-            # member.events.add(event_obj)
+            member.events.add(event_obj)
+
+    def create(self, validated_data):
+        """ Create a member."""
+        events = validated_data.pop("events", [])
+        auth_user = self.context["request"].user
+        validated_data["editor"] = auth_user
+        member = Member.objects.create(**validated_data)
+        self._get_or_create_events(events, member, auth_user)
 
         return member
 
-    # def update(self, instance, validated_data):
-    #     """ Update existing member by ID."""
+    def update(self, instance, validated_data):
+        """ Update existing member by ID."""
+        events = validated_data.pop("events", None)
+        auth_user = self.context["request"].user
+        validated_data["editor"] = auth_user
 
-    #     for attr, value in validated_data.items():
-    #         setattr(instance, attr, value)
+        if events is not None:
+            instance,events.clear()
+            self._get_or_create_events(events, instance, auth_user)
 
-    #     instance.save()
-    #     return instance
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+
+        instance.save()
+        return instance
 
 
 class MemberDetailSerializer(MemberSerializer):

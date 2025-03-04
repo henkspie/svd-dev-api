@@ -27,7 +27,7 @@ class AdminSiteTests(TestCase):
         self.client.force_login(self.admin_user)
         self.user = get_user_model().objects.create_user(
             svdUser="User_19600106",
-            email="user@example.com"
+            email="user@exxxample.com"
         )
         self.user.set_password("testpass123")
         self.user.save()
