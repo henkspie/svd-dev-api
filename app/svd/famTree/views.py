@@ -41,7 +41,7 @@ class MemberViewSet(viewsets.ModelViewSet):
             # print("Delete")
             instance.delete()
         # print("Not delete")
-        return Response(status=status.HTTP_404_NOT_FOUND)
+        return Response(status.HTTP_404_NOT_FOUND)
 
     def get_queryset(self):
         """ Retrieve all members and events."""
@@ -89,3 +89,5 @@ class LocationViewSet(viewsets.ModelViewSet):
     """ Manage events in the database """
     serializer_class = serializers.LocationSerializer
     queryset = Location.objects.all()
+    permission_classes = [IsAuthenticated]
+

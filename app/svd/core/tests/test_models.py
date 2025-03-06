@@ -57,7 +57,7 @@ class model_tests(TestCase):
              ["User_19500601", "User_19500601"],
              ["UsEr_19500602", "User_19500602"],
              ["User-Peter_19500601", "User-peter_19500601"],
-             ["USEr-peter_19500602", "User-peter_19500602"],
+             ["uSEr-peter_19500602", "User-peter_19500602"],
         ]
         for user, expected in sample_svdUsers:
             users = get_user_model().objects.create_user(svdUser=user, password="testpass123")
@@ -97,6 +97,7 @@ class model_tests(TestCase):
 
         self.assertEqual(user.svdUser, "Tester_19760114")
         self.assertTrue(user.check_password("testpass123"))
+        self.assertEqual(user.birthday, None)
 
     def test_adding_member_in_familyTree(self):
         """Test adding a member to the family tree is successful."""

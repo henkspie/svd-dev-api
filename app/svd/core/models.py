@@ -77,7 +77,9 @@ class SvdUserManager(BaseUserManager):
         extra_fields["svdUser"] = check_normalize_svdUser(user)
 
         try:
-            new_user = self.model(email=self.normalize_email(email), **extra_fields)
+            new_user = self.model(email=self.normalize_email(email),
+                                #   birthday=birthday,
+                                  **extra_fields)
             new_user.set_password(password)
             new_user.save(using=self._db)
         except Exception:
