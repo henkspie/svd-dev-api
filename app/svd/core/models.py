@@ -96,11 +96,19 @@ class SvdUserManager(BaseUserManager):
                          password=None, email=None, **extra_fields):
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
+        extra_fields.setdefault("access", "RW")
         return self._create_user(name, birthday, password, email, **extra_fields)
 
 
 class SvdUser(AbstractBaseUser, PermissionsMixin):
     """ SvdUser in this system."""
+    class Access(models.TextChoices):
+        NO_ACCESS = ("NO", _("No access to family data."),)
+        PARTLY_READ = ("PRO", _("Read only data from departed people."),)
+        PARTLY_READ_WRITE = ("PRW", _("Read write data departed people."),)
+        READ_ONLY = ("RO", _("Read all family data."),)
+        READ_WRITE = ("RW",  _("Full access to family data."),)
+
     svdUser = models.CharField(_("Name_Birthday of the svdUser"), max_length=63, unique=True)
     email = models.EmailField(_("Email valid for the User of the this website"),
                               max_length=255, blank=True, null=True)
@@ -108,6 +116,14 @@ class SvdUser(AbstractBaseUser, PermissionsMixin):
     birthday = models.DateField(_("Birthday of the user"), null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+    access = models.CharField(
+        max_length=3,
+        choices=Access,
+        default=Access.PARTLY_READ,
+        verbose_name=_("Access"),
+        db_comment=_("Can only be changed by superuser."),
+        help_text=_("Can only be changed by superuser."),
+    )
 
     objects = SvdUserManager()
     USERNAME_FIELD = 'svdUser'
@@ -119,18 +135,9 @@ class SvdUser(AbstractBaseUser, PermissionsMixin):
 
 class Member(StampedBaseModel):
     class Sex(models.TextChoices):
-        UNASSIGNED = (
-            "U",
-            _("Unassigned"),
-        )
-        MAN = (
-            "M",
-            _("Man"),
-        )
-        FEMALE = (
-            "F",
-            _("Female"),
-        )
+        UNASSIGNED = ("U", _("Unassigned"),)
+        MAN = ("M", _("Man"),)
+        FEMALE = ("F",_("Female"),)
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     firstname = models.CharField(
