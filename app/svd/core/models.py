@@ -77,9 +77,7 @@ class SvdUserManager(BaseUserManager):
         extra_fields["svdUser"] = check_normalize_svdUser(user)
 
         try:
-            new_user = self.model(email=self.normalize_email(email),
-                                #   birthday=birthday,
-                                  **extra_fields)
+            new_user = self.model(email=self.normalize_email(email), **extra_fields)
             new_user.set_password(password)
             new_user.save(using=self._db)
         except Exception:
@@ -137,7 +135,7 @@ class Member(StampedBaseModel):
     class Sex(models.TextChoices):
         UNASSIGNED = ("U", _("Unassigned"),)
         MAN = ("M", _("Man"),)
-        FEMALE = ("F",_("Female"),)
+        FEMALE = ("F", _("Female"),)
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     firstname = models.CharField(

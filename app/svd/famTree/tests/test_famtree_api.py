@@ -217,7 +217,7 @@ class PrivateMemberAPITest(TestCase):
         member = create_member(user=new_user)
         # print(self.user, new_user)
         url = detail_url(member.id)
-        res = self.client.delete(url)
+        self.client.delete(url)
         # print(res)
         # self.assertEqual(res.status_code, status.HTTP_404_NOT_FOUND)
         self.assertTrue(Member.objects.filter(id=member.id).exists())

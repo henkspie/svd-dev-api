@@ -90,4 +90,3 @@ class LocationViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.LocationSerializer
     queryset = Location.objects.all()
     permission_classes = [IsAuthenticated]
-
